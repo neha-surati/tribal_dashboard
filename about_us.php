@@ -1,14 +1,24 @@
 <?php
 //  BY ARYA 
 include "header.php";
-
-$stmt = $obj->con1->prepare("SELECT * FROM `about_us`");
-$stmt->execute();
-$Resp = $stmt->get_result();
-$stmt->close();
-if ($Resp->num_rows > 0) {
-    $data = $Resp->fetch_assoc();
+if (isset($_COOKIE['edit_id'])) {
     $mode = 'edit';
+    $editId = $_COOKIE['edit_id'];
+    $stmt = $obj->con1->prepare("SELECT * FROM `about_us` WHERE id=?");
+    $stmt->bind_param('i', $editId);
+    $stmt->execute();
+    $data = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+}
+
+if (isset($_COOKIE['view_id'])) {
+    $mode = 'view';
+    $viewId = $_COOKIE['view_id'];
+    $stmt = $obj->con1->prepare("SELECT * FROM `about_us` WHERE id=?");
+    $stmt->bind_param('i', $viewId);
+    $stmt->execute();
+    $data = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
 }
 
 if (isset($_REQUEST['update'])) {
@@ -37,8 +47,8 @@ if (isset($_REQUEST['update'])) {
     }
 
     try {
-        $stmt = $obj->con1->prepare("UPDATE `about_us` SET `description`=?,`image`=?");
-        $stmt->bind_param("ss", $desc, $PicFileName);
+        $stmt = $obj->con1->prepare("UPDATE `about_us` SET `description`=?,`image`=? WHERE `id`=?");
+        $stmt->bind_param("ssi", $desc, $PicFileName, $editId);
         $Res = $stmt->execute();
         $stmt->close();
         if (!$Resp) {
@@ -53,15 +63,14 @@ if (isset($_REQUEST['update'])) {
         move_uploaded_file($a_image_path, "images/aboutus_image/" . $PicFileName);
         setcookie("msg", "update", time() + 3600, "/");
         // setcookie("updateId", "", time() - 100, "/");
-        header("location:about_us.php");
+        header("location:about_us_details.php");
     } else {
         setcookie("msg", "fail", time() + 3600, "/");
-        header("location:about_us.php");
+        header("location:about_us_details.php");
     }
 }
 if (isset($_REQUEST["save"])) {
     $desc = $_REQUEST["description"];
-    $status = (isset($_REQUEST["status"])) ? "enable" : "disable";
     $a_image = $_FILES['a_image']['name'];
     $a_image = str_replace(' ', '_', $a_image);
     $a_image_path = $_FILES['a_image']['tmp_name'];
@@ -83,6 +92,7 @@ if (isset($_REQUEST["save"])) {
     }
 
     try {
+        // echo ("INSERT INTO `about_us`(`description`, `image`) VALUES ( $desc, $PicFileName)");
         $stmt = $obj->con1->prepare("INSERT INTO `about_us`(`description`, `image`) VALUES (?,?)");
         $stmt->bind_param("ss", $desc, $PicFileName);
         $Resp = $stmt->execute();
@@ -99,10 +109,10 @@ if (isset($_REQUEST["save"])) {
     if ($Resp) {
         move_uploaded_file($a_image_path, "images/aboutus_image/" . $PicFileName);
         setcookie("msg", "data", time() + 3600, "/");
-        header("location:about_us.php");
+        header("location:about_us_details.php");
     } else {
         setcookie("msg", "fail", time() + 3600, "/");
-        header("location:about_us.php");
+        header("location:about_us_details.php");
     }
 }
 
@@ -110,17 +120,17 @@ if (isset($_REQUEST["save"])) {
 
 <div class='p-6'>
     <div class="flex gap-6 items-center pb-8">
-        <!-- <span class="cursor-pointer">
+        <span class="cursor-pointer">
             <a href="javascript:go_back()" class="text-3xl text-black dark:text-white">
                 <i class="ri-arrow-left-line"></i>
             </a>
-        </span> -->
-
+        </span>
         <h1 class="dark:text-white-dar text-3xl font-bold">About Tribal Welfare</h1>
     </div>
     <div class="panel mt-6">
         <div class="mb-5">
             <form class="space-y-5" method="post" enctype="multipart/form-data">
+
                 <div class="mb-4">
                     <label for="quill">Description</label>
                     <div id="editor1">
@@ -128,20 +138,24 @@ if (isset($_REQUEST["save"])) {
                     </div>
                 </div>
                 <input type="hidden" id="description" name="description">
+
                 <div <?php echo (isset($mode) && $mode == 'view') ? 'hidden' : '' ?>>
-                    <label for="image">Image</label>
-                    <input id="a_img" name="a_img" class="demo1" type="file" data_btn_text="Browse" onchange="readURL(this,'PreviewImage')" placeholder="drag and drop file here" />
+                    <label for="a_image">Image</label>
+                    <input id="a_image" name="a_image" class="demo1" type="file" data_btn_text="Browse" onchange="readURL(this,'PreviewImage')" onchange="readURL(this,'PreviewImage')" placeholder="drag and drop file here" />
                 </div>
                 <div>
                     <h4 class="font-bold text-primary mt-2  mb-3" style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>">Preview</h4>
                     <img src="<?php echo (isset($mode)) ? 'images/aboutus_image/' . $data["image"] : '' ?>" name="PreviewImage" id="PreviewImage" width="400" height="400" style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
                     <div id="imgdiv" style="color:red"></div>
-                    <input type="hidden" name="old_img" id="old_img" value="<?php echo (isset($mode) && $mode == 'edit') ? $data["image"] : '' ?>" />
+                    <!-- <input type="hidden" name="old_img" id="old_img"
+						value="<?php echo (isset($mode) && $mode == 'edit') ? $data["image"] : '' ?>" /> -->
                 </div>
 
         </div>
         <div class="relative inline-flex align-middle gap-3 mt-4 ">
-            <button type="submit" name="save" id="save" class="btn btn-success" onclick="return setQuillInput()">Save</button>
+            <button type="submit" name="<?php echo isset($mode) && $mode == 'edit' ? 'update' : 'save' ?>" onclick="return setQuillInput()" id="save" class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : '' ?>">
+                <?php echo isset($mode) && $mode == 'edit' ? 'Update' : 'Save' ?>
+            </button>
             <button type="button" class="btn btn-danger" onclick="javascript:go_back()">Close</button>
         </div>
         </form>
@@ -151,9 +165,9 @@ if (isset($_REQUEST["save"])) {
     checkCookies();
 
     function go_back() {
-        eraseCookie("viewId");
-        eraseCookie("updateId");
-        var loc = "about_us.php";
+        eraseCookie("view_id");
+        eraseCookie("edit_id");
+        var loc = "about_us_details.php";
         window.location = loc;
     }
 
@@ -185,29 +199,29 @@ if (isset($_REQUEST["save"])) {
             return true;
         }
     }
+
     function readURL(input, preview) {
-		if (input.files && input.files[0]) {
-			var filename = input.files.item(0).name;
+        if (input.files && input.files[0]) {
+            var filename = input.files.item(0).name;
 
-			var reader = new FileReader();
-			var extn = filename.split(".");
+            var reader = new FileReader();
+            var extn = filename.split(".");
 
-			if (extn[1].toLowerCase() == "jpg" || extn[1].toLowerCase() == "jpeg" || extn[1].toLowerCase() == "png" || extn[1].toLowerCase() == "bmp") {
-				reader.onload = function (e) {
-					$('#' + preview).attr('src', e.target.result);
-					document.getElementById(preview).style.display = "block";
-				};
+            if (extn[1].toLowerCase() == "jpg" || extn[1].toLowerCase() == "jpeg" || extn[1].toLowerCase() == "png" || extn[1].toLowerCase() == "bmp") {
+                reader.onload = function(e) {
+                    $('#' + preview).attr('src', e.target.result);
+                    document.getElementById(preview).style.display = "block";
+                };
 
-				reader.readAsDataURL(input.files[0]);
-				$('#imgdiv').html("");
-				document.getElementById('save').disabled = false;
-			}
-			else {
-				$('#imgdiv').html("Please Select Image Only");
-				document.getElementById('save').disabled = true;
-			}
-		}
-	}
+                reader.readAsDataURL(input.files[0]);
+                $('#imgdiv').html("");
+                document.getElementById('save').disabled = false;
+            } else {
+                $('#imgdiv').html("Please Select Image Only");
+                document.getElementById('save').disabled = true;
+            }
+        }
+    }
 </script>
 <?php
 include "footer.php";
