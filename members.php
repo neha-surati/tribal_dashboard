@@ -14,8 +14,8 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
         $stmt_subimg->close();
 
         while ($row_subimg = mysqli_fetch_array($Resp_subimg)) {
-            if (file_exists("images/member_image/" . $row_subimg["image"])) {
-                unlink("images/member_image/" . $row_subimg["image"]);
+            if (file_exists("images/member_images/" . $row_subimg["image"])) {
+                unlink("images/member_images/" . $row_subimg["image"]);
             }
         }
 
@@ -36,8 +36,8 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
     }
 
     if ($Resp) {
-        if (file_exists("images/member_image/" . $member_img)) {
-            unlink("images/member_image/" . $member_img);
+        if (file_exists("images/member_images/" . $member_img)) {
+            unlink("images/member_images/" . $member_img);
         }
         setcookie("msg", "data_del", time() + 3600, "/");
     }
@@ -61,11 +61,6 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 
     function getActions(id, img) {
         return `<ul class="flex items-center gap-4">
-            <li>
-                <a href="javascript:add_subimages(` + id + `);" class='text-xl' x-tooltip="Add">
-                <i class="ri-add-line text text-success"></i>
-                </a>
-            </li>
             <li>
             <a href="javascript:viewdata(` + id + `);" class='text-xl' x-tooltip="View">
             <i class="ri-eye-line text-primary"></i>
@@ -100,8 +95,19 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
                                     <?php echo $i; ?>,
                                     '<?php echo addslashes($row["name"]); ?>',
                                     '<?php echo addslashes($row["designation"]); ?>',
-                                    '<?php echo addslashes(date("d-m-Y", strtotime($row["image"]))); ?>',
-                                    getActions(<?php echo $row["id"]; ?>)
+                                    `<?php
+                                        $img_array = array("jpg", "jpeg", "png", "bmp");
+                                        $vd_array = array("mp4", "webm", "ogg", "mkv");
+                                        $extn = strtolower(pathinfo($row["image"], PATHINFO_EXTENSION));
+                                        if (in_array($extn, $img_array)) {
+                                        ?>
+                                            <img src="images/member_images/<?php echo addslashes($row["image"]); ?>" width="200" height="200" style="display:<?php (in_array($extn, $img_array)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
+                                        <?php
+                                        } ?>
+                                        `,
+                                    '<span class="badge whitespace-nowrap" :class="{\'badge-outline-success\': \'<?php echo $row["status"]; ?>\' === \'enable\', \'badge-outline-danger\': \'<?php echo $row["status"]; ?>\' === \'disable\'}"><?php echo $row["status"]; ?></span>',
+                                getActions(<?php echo $row["id"]; ?>),
+                                   
                                 ],
                             <?php $i++;
                             }
