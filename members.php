@@ -110,8 +110,9 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
                                         <?php
                                         } ?>
                                         `,
-                                    '<?php echo addslashes($row["status"]);?>',
-                                    getActions(<?php echo $row["id"]; ?>)
+                                    '<span class="badge whitespace-nowrap" :class="{\'badge-outline-success\': \'<?php echo $row["status"]; ?>\' === \'enable\', \'badge-outline-danger\': \'<?php echo $row["status"]; ?>\' === \'disable\'}"><?php echo $row["status"]; ?></span>',
+                                getActions(<?php echo $row["id"]; ?>),
+                                   
                                 ],
                             <?php $i++;
                             }

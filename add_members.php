@@ -80,10 +80,10 @@ if (isset($_REQUEST["btn_update"])) {
 	$status = (isset($_REQUEST["status"]) && $_REQUEST["status"] == 'on') ? 'enable' : 'disable';
 	$old_img = $_REQUEST['old_img'];
 
-	if ($event_img != "") {
+	if ($mem_img != "") {
 		if (file_exists("images/member_images/" . $mem_img)) {
 			$i = 0;
-			$PicFileName = $event_img;
+			$PicFileName = $mem_img;
 			$Arr1 = explode('.', $PicFileName);
 
 			$PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
@@ -101,7 +101,7 @@ if (isset($_REQUEST["btn_update"])) {
 	}
 
 	try {
-		$stmt = $obj->con1->prepare("UPDATE `members` SET `name`=?,`designation`,`image`=? `status`=? WHERE `id`=?");
+		$stmt = $obj->con1->prepare("UPDATE `members` SET `name`=?,`designation`=?,`image`=?,`status`=? WHERE `id`=?");
 		$stmt->bind_param("ssssi", $name, $designation, $PicFileName, $status, $e_id);
 		$Resp = $stmt->execute();
 		if (!$Resp) {
