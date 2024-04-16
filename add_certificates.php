@@ -22,7 +22,6 @@ if (isset($_COOKIE['view_id'])) {
 }
 if (isset($_REQUEST["btnsubmit"])) {
 	$title = $_REQUEST["title"];
-	// $event_date = $_REQUEST["event_date"];
 	$certi_img = $_FILES['certi_img']['name'];
 	$certi_img = str_replace(' ', '_', $certi_img);
 	$certi_img_path = $_FILES['certi_img']['tmp_name'];
@@ -58,6 +57,7 @@ if (isset($_REQUEST["btnsubmit"])) {
 	} catch (\Exception $e) {
 		setcookie("sql_error", urlencode($e->getMessage()), time() + 3600, "/");
 	}
+	
 
 	if ($Resp) {
 		move_uploaded_file($certi_img_path, "images/certificates_images/" . $PicFileName);
@@ -71,7 +71,6 @@ if (isset($_REQUEST["btnsubmit"])) {
 if (isset($_REQUEST["btn_update"])) {
 	$e_id = $_COOKIE['edit_id'];
 	$title = $_REQUEST["title"];
-	// $certi_date = $_REQUEST["certi_date"];
 	$certi_img = $_FILES['certi_img']['name'];
 	$certi_img = str_replace(' ', '_', $certi_img);
 	$certi_img_path = $_FILES['certi_img']['tmp_name'];
@@ -99,7 +98,8 @@ if (isset($_REQUEST["btn_update"])) {
 	}
 
 	try {
-		$stmt = $obj->con1->prepare("UPDATE `certificates` SET `title`=?,`image`=? `status`=? WHERE `id`=?");
+		// echo ("UPDATE `certificates` SET `title`= $title, `image`=$PicFileName, `status`=$status WHERE `id`=$e_id");
+		$stmt = $obj->con1->prepare("UPDATE `certificates` SET `title`=?,`image`=?, `status`=? WHERE `id`=?");
 		$stmt->bind_param("sssi", $title, $PicFileName, $status, $e_id);
 		$Resp = $stmt->execute();
 		if (!$Resp) {
@@ -123,7 +123,7 @@ if (isset($_REQUEST["btn_update"])) {
 }
 
 if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
-	$event_subimg = $_REQUEST["event_subimg"];
+	$certi_img = $_REQUEST["certi_img"];
 	try {
 		$stmt_del = $obj->con1->prepare("DELETE FROM `certificates` WHERE id='" . $_REQUEST["id"] . "'");
 		$Resp = $stmt_del->execute();
@@ -140,8 +140,8 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 	}
 
 	if ($Resp) {
-		if (file_exists("images/certificates_images/" . $event_subimg)) {
-			unlink("images/certificates_images/" . $event_subimg);
+		if (file_exists("images/certificates_images/" . $certi_img)) {
+			unlink("images/certificates_images/" . $certi_img);
 		}
 		setcookie("msg", "data_del", time() + 3600, "/");
 	} else {
@@ -199,8 +199,7 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 
 				<div class="relative inline-flex align-middle gap-3 mt-4 ">
 					<button type="submit" name="<?php echo isset($mode) && $mode == 'edit' ? 'btn_update' : 'btnsubmit' ?>"
-						id="save" class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : '' ?>"
-						onclick="return setQuillInput()">
+						id="save" class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : '' ?>">
 						<?php echo isset($mode) && $mode == 'edit' ? 'Update' : 'Save' ?>
 					</button>
 					<button type="button" class="btn btn-danger"
@@ -216,39 +215,6 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 		eraseCookie("edit_id");
 		eraseCookie("view_id");
 		window.location = "certificates.php";
-	}
-
-	var quill1 = new Quill('#editor1', {
-		theme: 'snow',
-	});
-	var toolbar1 = quill1.container.previousSibling;
-	toolbar1.querySelector('.ql-picker').setAttribute('title', 'Font Size');
-	toolbar1.querySelector('button.ql-bold').setAttribute('title', 'Bold');
-	toolbar1.querySelector('button.ql-italic').setAttribute('title', 'Italic');
-	toolbar1.querySelector('button.ql-link').setAttribute('title', 'Link');
-	toolbar1.querySelector('button.ql-underline').setAttribute('title', 'Underline');
-	toolbar1.querySelector('button.ql-clean').setAttribute('title', 'Clear Formatting');
-	toolbar1.querySelector('[value=ordered]').setAttribute('title', 'Ordered List');
-	toolbar1.querySelector('[value=bullet]').setAttribute('title', 'Bullet List');
-
-	function setQuillInput() {
-		let quillInput1 = document.getElementById("quill-input1");
-		quillInput1.value = quill1.root.innerHTML;
-
-		let val1 = quillInput1.value.replace(/<[^>]*>/g, '');
-		
-		if (val1.trim() == '') {
-			coloredToast("danger", 'Please add something in Description.');
-			return false;
-		}
-		<?php if(!isset($mode)){ ?>
-         else if (<?php echo (!isset($mode))?true:false ?>) {
-            return checkImage();
-        } 
-        <?php } ?> 
-		// else{
-		// 	return true;
-		// }
 	}
 
 	function readURL(input, preview) {
