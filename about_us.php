@@ -14,9 +14,31 @@ if ($Resp->num_rows > 0) {
 if (isset($_REQUEST['update'])) {
     $desc = $_REQUEST["description"];
     $status = (isset($_REQUEST["status"])) ? "enable" : "disable";
+    $a_image = $_FILES['a_image']['name'];
+    $a_image = str_replace(' ', '_', $a_image);
+    $a_image_path = $_FILES['a_image']['tmp_name'];
+
+    if ($a_image != "") {
+        if (file_exists("images/aboutus_image/" . $a_image)) {
+            $i = 0;
+            $PicFileName = $a_image;
+            $Arr1 = explode('.', $PicFileName);
+
+            $PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
+            while (file_exists("images/aboutus_image/" . $PicFileName)) {
+                $i++;
+                $PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
+            }
+            unlink("images/aboutus_image/" . $old_img);
+            move_uploaded_file($a_image_path, "images/aboutus_image/" . $PicFileName);
+        } else {
+            $PicFileName = $old_img;
+        }
+    }
+
     try {
-        $stmt = $obj->con1->prepare("UPDATE `about_us` SET `description`=?,`status`=?");
-        $stmt->bind_param("ss", $desc, $status);
+        $stmt = $obj->con1->prepare("UPDATE `about_us` SET `description`=?,`image`=?");
+        $stmt->bind_param("ss", $desc, $PicFileName);
         $Res = $stmt->execute();
         $stmt->close();
         if (!$Resp) {
@@ -28,8 +50,9 @@ if (isset($_REQUEST['update'])) {
         setcookie("sql_error", urlencode($e->getMessage()), time() + 3600, "/");
     }
     if ($Res) {
+        move_uploaded_file($a_image_path, "images/aboutus_image/" . $PicFileName);
         setcookie("msg", "update", time() + 3600, "/");
-        setcookie("updateId", "", time() - 100, "/");
+        // setcookie("updateId", "", time() - 100, "/");
         header("location:about_us.php");
     } else {
         setcookie("msg", "fail", time() + 3600, "/");
@@ -39,9 +62,29 @@ if (isset($_REQUEST['update'])) {
 if (isset($_REQUEST["save"])) {
     $desc = $_REQUEST["description"];
     $status = (isset($_REQUEST["status"])) ? "enable" : "disable";
+    $a_image = $_FILES['a_image']['name'];
+    $a_image = str_replace(' ', '_', $a_image);
+    $a_image_path = $_FILES['a_image']['tmp_name'];
+
+    if ($a_image != "") {
+        if (file_exists("images/aboutus_image/" . $a_image)) {
+            $i = 0;
+            $PicFileName = $a_image;
+            $Arr1 = explode('.', $PicFileName);
+
+            $PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
+            while (file_exists("images/aboutus_image/" . $PicFileName)) {
+                $i++;
+                $PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
+            }
+        } else {
+            $PicFileName = $a_image;
+        }
+    }
+
     try {
-        $stmt = $obj->con1->prepare("INSERT INTO `about_us`(`description`, `status`) VALUES (?,?)");
-        $stmt->bind_param("ss", $desc, $status);
+        $stmt = $obj->con1->prepare("INSERT INTO `about_us`(`description`, `image`) VALUES (?,?)");
+        $stmt->bind_param("ss", $desc, $PicFileName);
         $Resp = $stmt->execute();
         if (!$Resp) {
             throw new Exception(
@@ -54,6 +97,7 @@ if (isset($_REQUEST["save"])) {
     }
 
     if ($Resp) {
+        move_uploaded_file($a_image_path, "images/aboutus_image/" . $PicFileName);
         setcookie("msg", "data", time() + 3600, "/");
         header("location:about_us.php");
     } else {
@@ -84,16 +128,20 @@ if (isset($_REQUEST["save"])) {
                     </div>
                 </div>
                 <input type="hidden" id="description" name="description">
-
-                <div class="mb-4">
-                    <label for="custom_switch_checkbox1">Status</label>
-                    <label class="w-12 h-6 relative">
-                        <input type="checkbox" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" id="status" name="status" <?php echo isset($mode) && $data['status'] == 'enable' ? 'checked' : '' ?>><span class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
-                    </label>
+                <div <?php echo (isset($mode) && $mode == 'view') ? 'hidden' : '' ?>>
+                    <label for="image">Image</label>
+                    <input id="a_img" name="a_img" class="demo1" type="file" data_btn_text="Browse" onchange="readURL(this,'PreviewImage')" placeholder="drag and drop file here" />
                 </div>
+                <div>
+                    <h4 class="font-bold text-primary mt-2  mb-3" style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>">Preview</h4>
+                    <img src="<?php echo (isset($mode)) ? 'images/aboutus_image/' . $data["image"] : '' ?>" name="PreviewImage" id="PreviewImage" width="400" height="400" style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
+                    <div id="imgdiv" style="color:red"></div>
+                    <input type="hidden" name="old_img" id="old_img" value="<?php echo (isset($mode) && $mode == 'edit') ? $data["image"] : '' ?>" />
+                </div>
+
         </div>
         <div class="relative inline-flex align-middle gap-3 mt-4 ">
-            <button type="submit" name="<?php echo isset($mode) && $mode == 'edit' ? 'update' : 'save' ?>" id="save" class="btn btn-success" onclick="return setQuillInput()">Save</button>
+            <button type="submit" name="save" id="save" class="btn btn-success" onclick="return setQuillInput()">Save</button>
             <button type="button" class="btn btn-danger" onclick="javascript:go_back()">Close</button>
         </div>
         </form>
@@ -137,6 +185,29 @@ if (isset($_REQUEST["save"])) {
             return true;
         }
     }
+    function readURL(input, preview) {
+		if (input.files && input.files[0]) {
+			var filename = input.files.item(0).name;
+
+			var reader = new FileReader();
+			var extn = filename.split(".");
+
+			if (extn[1].toLowerCase() == "jpg" || extn[1].toLowerCase() == "jpeg" || extn[1].toLowerCase() == "png" || extn[1].toLowerCase() == "bmp") {
+				reader.onload = function (e) {
+					$('#' + preview).attr('src', e.target.result);
+					document.getElementById(preview).style.display = "block";
+				};
+
+				reader.readAsDataURL(input.files[0]);
+				$('#imgdiv').html("");
+				document.getElementById('save').disabled = false;
+			}
+			else {
+				$('#imgdiv').html("Please Select Image Only");
+				document.getElementById('save').disabled = true;
+			}
+		}
+	}
 </script>
 <?php
 include "footer.php";
