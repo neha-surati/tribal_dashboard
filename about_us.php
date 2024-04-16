@@ -22,34 +22,38 @@ if (isset($_COOKIE['view_id'])) {
 }
 
 if (isset($_REQUEST['update'])) {
-    $desc = $_REQUEST["description"];
-    $status = (isset($_REQUEST["status"])) ? "enable" : "disable";
+    $e_id = $_COOKIE['edit_id'];
+    $desc = $_REQUEST['description'];
     $a_image = $_FILES['a_image']['name'];
     $a_image = str_replace(' ', '_', $a_image);
     $a_image_path = $_FILES['a_image']['tmp_name'];
+    $old_img = $_REQUEST['old_img'];
+
 
     if ($a_image != "") {
-        if (file_exists("images/aboutus_image/" . $a_image)) {
-            $i = 0;
-            $PicFileName = $a_image;
-            $Arr1 = explode('.', $PicFileName);
+		if (file_exists("images/aboutus_image/" . $a_image)) {
+			$i = 0;
+			$PicFileName = $a_image;
+			$Arr1 = explode('.', $PicFileName);
 
-            $PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
-            while (file_exists("images/aboutus_image/" . $PicFileName)) {
-                $i++;
-                $PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
-            }
-            unlink("images/aboutus_image/" . $old_img);
-            move_uploaded_file($a_image_path, "images/aboutus_image/" . $PicFileName);
-        } else {
-            $PicFileName = $old_img;
-        }
-    }
-
+			$PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
+			while (file_exists("images/aboutus_image/" . $PicFileName)) {
+				$i++;
+				$PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
+			}
+		} else {
+			$PicFileName = $a_image;
+		}
+		unlink("images/aboutus_image/" . $old_img);
+		move_uploaded_file($a_image_path, "images/aboutus_image/" . $PicFileName);
+	} else {
+		$PicFileName = $old_img;
+	}
     try {
+        // echo ("UPDATE `about_us` SET `description`= $desc , `image`= $PicFileName WHERE `id`= $e_id");
         $stmt = $obj->con1->prepare("UPDATE `about_us` SET `description`=?,`image`=? WHERE `id`=?");
-        $stmt->bind_param("ssi", $desc, $PicFileName, $editId);
-        $Res = $stmt->execute();
+        $stmt->bind_param("ssi", $desc, $PicFileName, $e_id);
+        $Resp = $stmt->execute();
         $stmt->close();
         if (!$Resp) {
             throw new Exception(
@@ -59,10 +63,9 @@ if (isset($_REQUEST['update'])) {
     } catch (\Exception $e) {
         setcookie("sql_error", urlencode($e->getMessage()), time() + 3600, "/");
     }
-    if ($Res) {
-        move_uploaded_file($a_image_path, "images/aboutus_image/" . $PicFileName);
+    if ($Resp) {
+        setcookie("edit_id", "", time() - 3600, "/");
         setcookie("msg", "update", time() + 3600, "/");
-        // setcookie("updateId", "", time() - 100, "/");
         header("location:about_us_details.php");
     } else {
         setcookie("msg", "fail", time() + 3600, "/");
@@ -70,7 +73,7 @@ if (isset($_REQUEST['update'])) {
     }
 }
 if (isset($_REQUEST["save"])) {
-    $desc = $_REQUEST["description"];
+    $desc = $_REQUEST['description'];
     $a_image = $_FILES['a_image']['name'];
     $a_image = str_replace(' ', '_', $a_image);
     $a_image_path = $_FILES['a_image']['tmp_name'];
@@ -125,7 +128,9 @@ if (isset($_REQUEST["save"])) {
                 <i class="ri-arrow-left-line"></i>
             </a>
         </span>
-        <h1 class="dark:text-white-dar text-3xl font-bold">About Tribal Welfare</h1>
+        <h1 class="dark:text-white-dar text-2xl font-bold">About Us -
+            <?php echo (isset($mode)) ? (($mode == 'view') ? 'View' : 'Edit') : 'Add' ?>
+        </h1>
     </div>
     <div class="panel mt-6">
         <div class="mb-5">
@@ -141,19 +146,27 @@ if (isset($_REQUEST["save"])) {
 
                 <div <?php echo (isset($mode) && $mode == 'view') ? 'hidden' : '' ?>>
                     <label for="a_image">Image</label>
-                    <input id="a_image" name="a_image" class="demo1" type="file" data_btn_text="Browse" onchange="readURL(this,'PreviewImage')" onchange="readURL(this,'PreviewImage')" placeholder="drag and drop file here" />
+                    <input id="a_image" name="a_image" class="demo1" type="file" data_btn_text="Browse"
+                        onchange="readURL(this,'PreviewImage')" onchange="readURL(this,'PreviewImage')"
+                        placeholder="drag and drop file here" />
                 </div>
                 <div>
-                    <h4 class="font-bold text-primary mt-2  mb-3" style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>">Preview</h4>
-                    <img src="<?php echo (isset($mode)) ? 'images/aboutus_image/' . $data["image"] : '' ?>" name="PreviewImage" id="PreviewImage" width="400" height="400" style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
+                    <h4 class="font-bold text-primary mt-2  mb-3"
+                        style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>">Preview</h4>
+                    <img src="<?php echo (isset($mode)) ? 'images/aboutus_image/' . $data["image"] : '' ?>"
+                        name="PreviewImage" id="PreviewImage" width="400" height="400"
+                        style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>"
+                        class="object-cover shadow rounded">
                     <div id="imgdiv" style="color:red"></div>
-                    <!-- <input type="hidden" name="old_img" id="old_img"
-						value="<?php echo (isset($mode) && $mode == 'edit') ? $data["image"] : '' ?>" /> -->
+                    <input type="hidden" name="old_img" id="old_img"
+                        value="<?php echo (isset($mode) && $mode == 'edit') ? $data["image"] : '' ?>" />
                 </div>
 
         </div>
         <div class="relative inline-flex align-middle gap-3 mt-4 ">
-            <button type="submit" name="<?php echo isset($mode) && $mode == 'edit' ? 'update' : 'save' ?>" onclick="return setQuillInput()" id="save" class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : '' ?>">
+            <button type="submit" name="<?php echo isset($mode) && $mode == 'edit' ? 'update' : 'save' ?>"
+                onclick="return setQuillInput()" id="save"
+                class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : '' ?>">
                 <?php echo isset($mode) && $mode == 'edit' ? 'Update' : 'Save' ?>
             </button>
             <button type="button" class="btn btn-danger" onclick="javascript:go_back()">Close</button>
@@ -162,8 +175,6 @@ if (isset($_REQUEST["save"])) {
     </div>
 </div>
 <script>
-    checkCookies();
-
     function go_back() {
         eraseCookie("view_id");
         eraseCookie("edit_id");
@@ -208,7 +219,7 @@ if (isset($_REQUEST["save"])) {
             var extn = filename.split(".");
 
             if (extn[1].toLowerCase() == "jpg" || extn[1].toLowerCase() == "jpeg" || extn[1].toLowerCase() == "png" || extn[1].toLowerCase() == "bmp") {
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     $('#' + preview).attr('src', e.target.result);
                     document.getElementById(preview).style.display = "block";
                 };

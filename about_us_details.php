@@ -97,8 +97,8 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
                                         ?>
                                             <img src="images/aboutus_image/<?php echo addslashes($row["image"]); ?>" width="200" height="200" style="display:<?php (in_array($extn, $img_array)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
                                         <?php
-                                        } ?>
-                                        `,
+                                        } 
+                                    ?>`,
                                     getActions(<?php echo $row["id"]; ?>)
                                 ],
                             <?php $i++;
