@@ -46,7 +46,7 @@ if (isset($_REQUEST["btnsubmit"])) {
 	}
 
 	try {
-		echo "INSERT INTO `members`(`name`,`designation`, `image`, `status`) VALUES ('".$name."','".$designation."','".$PicFileName."','".$status."')";
+		// echo "INSERT INTO `members`(`name`,`designation`, `image`, `status`) VALUES ('".$name."','".$designation."','".$PicFileName."','".$status."')";
 		$stmt = $obj->con1->prepare("INSERT INTO `members`(`name`,`designation`, `image`, `status`) VALUES (?,?,?,?)");
 		$stmt->bind_param("ssss", $name, $designation, $PicFileName, $status);
 		$Resp = $stmt->execute();
@@ -61,7 +61,7 @@ if (isset($_REQUEST["btnsubmit"])) {
 	}
 
 	if ($Resp) {
-		move_uploaded_file($mem_img_path, "images/members_images/" . $PicFileName);
+		move_uploaded_file($mem_img_path, "images/member_images/" . $PicFileName);
 		setcookie("msg", "data", time() + 3600, "/");
 		header("location:members.php");
 	} else {
@@ -189,7 +189,7 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 				</div>
 				<div <?php echo (isset($mode) && $mode == 'view') ? 'hidden' : '' ?>>
 					<label for="image">Image</label>
-					<input id="event_img" name="event_img" class="demo1" type="file" data_btn_text="Browse"
+					<input id="mem_img" name="mem_img" class="demo1" type="file" data_btn_text="Browse"
 						onchange="readURL(this,'PreviewImage')" onchange="readURL(this,'PreviewImage')"
 						placeholder="drag and drop file here" />
 				</div>
