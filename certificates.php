@@ -99,7 +99,20 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
                             while ($row = mysqli_fetch_array($Resp)) { ?>[
                                     <?php echo $i; ?>,
                                     '<?php echo addslashes($row["title"]); ?>',
-                                    '<?php echo addslashes(date("d-m-Y", strtotime($row["image"]))); ?>',
+
+                                    `<?php
+                                        $img_array = array("jpg", "jpeg", "png", "bmp");
+                                        $vd_array = array("mp4", "webm", "ogg", "mkv");
+                                        $extn = strtolower(pathinfo($row["image"], PATHINFO_EXTENSION));
+                                        if (in_array($extn, $img_array)) {
+                                        ?>
+                                            <img src="images/certificates_images/<?php echo addslashes($row["image"]); ?>" width="200" height="200" style="display:<?php (in_array($extn, $img_array)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
+                                        <?php
+                                        } ?>
+                                        `,
+
+
+                                    '<span class="badge whitespace-nowrap" :class="{\'badge-outline-success\': \'<?php echo $row["status"]; ?>\' === \'enable\', \'badge-outline-danger\': \'<?php echo $row["status"]; ?>\' === \'disable\'}"><?php echo $row["status"]; ?></span>',
                                     getActions(<?php echo $row["id"]; ?>)
                                 ],
                             <?php $i++;

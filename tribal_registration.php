@@ -90,7 +90,7 @@ if (isset($_REQUEST["update"])) {
         $stmt = $obj->con1->prepare(
             "UPDATE `registration` SET `firstname`=?,`lastname`=?,`dob`=?,`gender`=?,`phone_no`=?,`email`=?,`marital_status`=?,`state`=?,`city`=?,`pincode`=?,`occupation`=?,`blood_group`=?,`password`=? WHERE `id`=?"
         );
-        //echo "UPDATE `registration` SET `firstname`=$firstname,`lastname`=$lastname,`dob`=$dob,`gender`=$gender,`phone_no`=$phone_no,`email`=$email,`marital_status`=$marital_s,`state`=$state,`city`=$city,`pincode`=$pincode,`occupation`=$occupation,`blood_group`=$blood_g,`password`=$password WHERE `id`=$editId";
+        // echo "UPDATE `registration` SET `firstname`=$firstname,`lastname`=$lastname,`dob`=$dob,`gender`=$gender,`phone_no`=$phone_no,`email`=$email,`marital_status`=$marital_s,`state`=$state,`city`=$city,`pincode`=$pincode,`occupation`=$occupation,`blood_group`=$blood_g,`password`=$password WHERE `id`=$editId";
         $stmt->bind_param("ssssisssissssi", $firstname, $lastname, $dob, $gender, $phone_no, $email, $marital_s, $state, $city, $pincode, $occupation, $blood_g, $password, $editId);
 
         $Resp = $stmt->execute();
@@ -98,8 +98,10 @@ if (isset($_REQUEST["update"])) {
             throw new Exception(
                 "Problem in adding! " . strtok($obj->con1->error, "(")
             );
+            
         }
         $stmt->close();
+        
     } catch (\Exception $e) {
         setcookie("sql_error", urlencode($e->getMessage()), time() + 3600, "/");
     }
@@ -156,12 +158,6 @@ if (isset($_REQUEST["update"])) {
                                 <label class=" flex items-center cursor-pointer">
                                     <input type="radio" name="gender" id="female" class="form-radio" value="female" <?php echo (isset($mode) && $data['gender'] == "female") ? "checked" : "" ?> />
                                     <span class="text-black">Female</span>
-                                </label>
-                            </div>
-                            <div>
-                                <label class=" flex items-center cursor-pointer">
-                                    <input type="radio" name="gender" id="other" class="form-radio" value="female" <?php echo (isset($mode) && $data['gender'] == "other") ? "checked" : "" ?> />
-                                    <span class="text-black">Other</span>
                                 </label>
                             </div>
                         </div>
@@ -304,11 +300,11 @@ if (isset($_REQUEST["update"])) {
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        eraseCookie("edit_id");
-        eraseCookie("view_id");
-    });
-    checkCookies();
+    //$(document).ready(function() {
+       // eraseCookie("edit_id");
+       // eraseCookie("view_id");
+   // });
+    checkCosokies();
 
     function go_back() {
         eraseCookie("edit_id");

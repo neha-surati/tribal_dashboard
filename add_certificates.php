@@ -45,9 +45,9 @@ if (isset($_REQUEST["btnsubmit"])) {
 	}
 
 	try {
-		echo "INSERT INTO `certificates`(`title`, `image`, `status`) VALUES ('".$title."','".$PicFileName."','".$status."')";
+		// echo "INSERT INTO `certificates`(`title`, `image`, `status`) VALUES ('".$title."','".$PicFileName."','".$status."')";
 		$stmt = $obj->con1->prepare("INSERT INTO `certificates`(`title`, `image`, `status`) VALUES (?,?,?)");
-		$stmt->bind_param("ssss", $title, $PicFileName, $status);
+		$stmt->bind_param("sss", $title, $PicFileName, $status);
 		$Resp = $stmt->execute();
 		if (!$Resp) {
 			throw new Exception(
@@ -78,10 +78,10 @@ if (isset($_REQUEST["btn_update"])) {
 	$status = (isset($_REQUEST["status"]) && $_REQUEST["status"] == 'on') ? 'enable' : 'disable';
 	$old_img = $_REQUEST['old_img'];
 
-	if ($event_img != "") {
+	if ($certi_img != "") {
 		if (file_exists("images/certificates_images/" . $certi_img)) {
 			$i = 0;
-			$PicFileName = $event_img;
+			$PicFileName = $certi_img;
 			$Arr1 = explode('.', $PicFileName);
 
 			$PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
@@ -99,8 +99,8 @@ if (isset($_REQUEST["btn_update"])) {
 	}
 
 	try {
-		$stmt = $obj->con1->prepare("UPDATE `certificates` SET `title`=?,`image`=? `status`=? WHERE `event_id`=?");
-		$stmt->bind_param("ssssi", $event_name, $PicFileName, $status, $e_id);
+		$stmt = $obj->con1->prepare("UPDATE `certificates` SET `title`=?,`image`=? `status`=? WHERE `id`=?");
+		$stmt->bind_param("sssi", $title, $PicFileName, $status, $e_id);
 		$Resp = $stmt->execute();
 		if (!$Resp) {
 			throw new Exception(
@@ -175,26 +175,26 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 					<label class="w-12 h-6 relative">
 						<input type="checkbox"
 							class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" id="status"
-							name="status" <?php echo (isset($mode) && $data['b_status'] == 'enable') ? 'checked' : '' ?>
+							name="status" <?php echo (isset($mode) && $data['status'] == 'enable') ? 'checked' : '' ?>
 							<?php echo (isset($mode) && $mode == 'view') ? 'disabled' : '' ?>><span
 							class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
 					</label>
 				</div>
 				<div <?php echo (isset($mode) && $mode == 'view') ? 'hidden' : '' ?>>
 					<label for="image">Image</label>
-					<input id="event_img" name="event_img" class="demo1" type="file" data_btn_text="Browse"
+					<input id="certi_img" name="certi_img" class="demo1" type="file" data_btn_text="Browse"
 						onchange="readURL(this,'PreviewImage')" onchange="readURL(this,'PreviewImage')"
 						placeholder="drag and drop file here" />
 				</div>
 				<div>
 					<h4 class="font-bold text-primary mt-2  mb-3"
 						style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>">Preview</h4>
-					<img src="<?php echo (isset($mode)) ? 'images/certificates_images/' . $data["main_img"] : '' ?>" name="PreviewImage"
+					<img src="<?php echo (isset($mode)) ? 'images/certificates_images/' . $data["image"] : '' ?>" name="PreviewImage"
 						id="PreviewImage" width="400" height="400"
 						style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
 					<div id="imgdiv" style="color:red"></div>
 					<input type="hidden" name="old_img" id="old_img"
-						value="<?php echo (isset($mode) && $mode == 'edit') ? $data["main_img"] : '' ?>" />
+						value="<?php echo (isset($mode) && $mode == 'edit') ? $data["image"] : '' ?>" />
 				</div>
 
 				<div class="relative inline-flex align-middle gap-3 mt-4 ">
