@@ -62,11 +62,6 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
     function getActions(id, img) {
         return `<ul class="flex items-center gap-4">
             <li>
-                <a href="javascript:add_subimages(` + id + `);" class='text-xl' x-tooltip="Add">
-                <i class="ri-add-line text text-success"></i>
-                </a>
-            </li>
-            <li>
             <a href="javascript:viewdata(` + id + `);" class='text-xl' x-tooltip="View">
             <i class="ri-eye-line text-primary"></i>
             </a>
