@@ -14,8 +14,8 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
         $stmt_subimg->close();
 
         while ($row_subimg = mysqli_fetch_array($Resp_subimg)) {
-            if (file_exists("images/member_image/" . $row_subimg["image"])) {
-                unlink("images/member_image/" . $row_subimg["image"]);
+            if (file_exists("images/member_images/" . $row_subimg["image"])) {
+                unlink("images/member_images/" . $row_subimg["image"]);
             }
         }
 
@@ -36,8 +36,8 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
     }
 
     if ($Resp) {
-        if (file_exists("images/member_image/" . $member_img)) {
-            unlink("images/member_image/" . $member_img);
+        if (file_exists("images/member_images/" . $member_img)) {
+            unlink("images/member_images/" . $member_img);
         }
         setcookie("msg", "data_del", time() + 3600, "/");
     }
@@ -100,7 +100,17 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
                                     <?php echo $i; ?>,
                                     '<?php echo addslashes($row["name"]); ?>',
                                     '<?php echo addslashes($row["designation"]); ?>',
-                                    '<?php echo addslashes(date("d-m-Y", strtotime($row["image"]))); ?>',
+                                    `<?php
+                                        $img_array = array("jpg", "jpeg", "png", "bmp");
+                                        $vd_array = array("mp4", "webm", "ogg", "mkv");
+                                        $extn = strtolower(pathinfo($row["image"], PATHINFO_EXTENSION));
+                                        if (in_array($extn, $img_array)) {
+                                        ?>
+                                            <img src="images/member_images/<?php echo addslashes($row["image"]); ?>" width="200" height="200" style="display:<?php (in_array($extn, $img_array)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
+                                        <?php
+                                        } ?>
+                                        `,
+                                    '<?php echo addslashes($row["status"]);?>',
                                     getActions(<?php echo $row["id"]; ?>)
                                 ],
                             <?php $i++;

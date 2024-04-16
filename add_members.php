@@ -196,12 +196,12 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 				<div>
 					<h4 class="font-bold text-primary mt-2  mb-3"
 						style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>">Preview</h4>
-					<img src="<?php echo (isset($mode)) ? 'images/member_images/' . $data["main_img"] : '' ?>" name="PreviewImage"
+					<img src="<?php echo (isset($mode)) ? 'images/member_images/' . $data["image"] : '' ?>" name="PreviewImage"
 						id="PreviewImage" width="400" height="400"
 						style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
 					<div id="imgdiv" style="color:red"></div>
 					<input type="hidden" name="old_img" id="old_img"
-						value="<?php echo (isset($mode) && $mode == 'edit') ? $data["main_img"] : '' ?>" />
+						value="<?php echo (isset($mode) && $mode == 'edit') ? $data["image"] : '' ?>" />
 				</div>
 
 				<div class="relative inline-flex align-middle gap-3 mt-4 ">
