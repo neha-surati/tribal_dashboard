@@ -411,10 +411,10 @@ if (!isset($_SESSION["adminlogin"])) {
                     <div class="relative flex w-full items-center bg-white px-5 py-2.5 dark:bg-[#0e1726]">
                         <div class="horizontal-logo flex items-center justify-between ltr:mr-2 rtl:ml-2 lg:hidden">
                             <a class="main-logo flex shrink-0 items-center justify-center">
-                                <img class="w-8 ml-[5px] flex-none" src="assets/images/polygon_logo.png" alt="image" />
+                                <img class="w-8 ml-[5px] flex-none" src="assets/images/tribal_favicon.png" alt="image" />
                                 <span
-                                    class="text-2xl ltr:ml-1.5 rtl:mr-1.5 font-semibold align-middle lg:inline dark:text-white-light">PDS
-                                    INDIA</span>
+                                    class="text-2xl ltr:ml-1.5 rtl:mr-1.5 font-semibold align-middle lg:inline dark:text-white-light">Tribal Welfare
+                                </span>
                             </a>
 
                             <a href="javascript:;"
