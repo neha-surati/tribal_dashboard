@@ -164,21 +164,12 @@ if (!isset($_SESSION["adminlogin"])) {
                             <a href="user_details.php"
                                 class="nav-link group <?php echo basename($_SERVER["PHP_SELF"]) == "user_details.php" ? "active" : "" ?>">
                                 <div class="flex items-center">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
-                                        <path opacity="0.5"
-                                            d="M16 4.00195C18.175 4.01406 19.3529 4.11051 20.1213 4.87889C21 5.75757 21 7.17179 21 10.0002V16.0002C21 18.8286 21 20.2429 20.1213 21.1215C19.2426 22.0002 17.8284 22.0002 15 22.0002H9C6.17157 22.0002 4.75736 22.0002 3.87868 21.1215C3 20.2429 3 18.8286 3 16.0002V10.0002C3 7.17179 3 5.75757 3.87868 4.87889C4.64706 4.11051 5.82497 4.01406 8 4.00195"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path d="M8 14H16" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M7 10.5H17" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M9 17.5H15" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path
-                                            d="M8 3.5C8 2.67157 8.67157 2 9.5 2H14.5C15.3284 2 16 2.67157 16 3.5V4.5C16 5.32843 15.3284 6 14.5 6H9.5C8.67157 6 8 5.32843 8 4.5V3.5Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                    </svg>
+                                <svg class="shrink-0 group-hover:!text-primary" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle opacity="0.5" cx="15" cy="6" r="3" fill="currentColor"></circle>
+                                            <ellipse opacity="0.5" cx="16" cy="17" rx="5" ry="3" fill="currentColor"></ellipse>
+                                            <circle cx="9.00098" cy="6" r="4" fill="currentColor"></circle>
+                                            <ellipse cx="9.00098" cy="17.001" rx="7" ry="4" fill="currentColor"></ellipse>
+                                        </svg>
                                     <span
                                         class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Users
                                         
@@ -190,21 +181,14 @@ if (!isset($_SESSION["adminlogin"])) {
                             <a href="members.php"
                                 class="nav-link group <?php echo basename($_SERVER["PHP_SELF"]) == "members.php" ? "active" : "" ?>">
                                 <div class="flex items-center">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
-                                        <path opacity="0.5"
-                                            d="M16 4.00195C18.175 4.01406 19.3529 4.11051 20.1213 4.87889C21 5.75757 21 7.17179 21 10.0002V16.0002C21 18.8286 21 20.2429 20.1213 21.1215C19.2426 22.0002 17.8284 22.0002 15 22.0002H9C6.17157 22.0002 4.75736 22.0002 3.87868 21.1215C3 20.2429 3 18.8286 3 16.0002V10.0002C3 7.17179 3 5.75757 3.87868 4.87889C4.64706 4.11051 5.82497 4.01406 8 4.00195"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path d="M8 14H16" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M7 10.5H17" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M9 17.5H15" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path
-                                            d="M8 3.5C8 2.67157 8.67157 2 9.5 2H14.5C15.3284 2 16 2.67157 16 3.5V4.5C16 5.32843 15.3284 6 14.5 6H9.5C8.67157 6 8 5.32843 8 4.5V3.5Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                    </svg>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5"></circle>
+                                                <path opacity="0.5" d="M18 9C19.6569 9 21 7.88071 21 6.5C21 5.11929 19.6569 4 18 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                                <path opacity="0.5" d="M6 9C4.34315 9 3 7.88071 3 6.5C3 5.11929 4.34315 4 6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                                <ellipse cx="12" cy="17" rx="6" ry="4" stroke="currentColor" stroke-width="1.5"></ellipse>
+                                                <path opacity="0.5" d="M20 19C21.7542 18.6153 23 17.6411 23 16.5C23 15.3589 21.7542 14.3847 20 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                                <path opacity="0.5" d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                            </svg>
                                     <span
                                         class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Members
                                         
@@ -216,23 +200,10 @@ if (!isset($_SESSION["adminlogin"])) {
                             <a href="event.php"
                                 class="nav-link group <?php echo basename($_SERVER["PHP_SELF"]) == "event.php" ? "active" : "" ?>">
                                 <div class="flex items-center">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
-                                        <path opacity="0.5"
-                                            d="M2 17C2 15.1144 2 14.1716 2.58579 13.5858C3.17157 13 4.11438 13 6 13H18C19.8856 13 20.8284 13 21.4142 13.5858C22 14.1716 22 15.1144 22 17C22 18.8856 22 19.8284 21.4142 20.4142C20.8284 21 19.8856 21 18 21H6C4.11438 21 3.17157 21 2.58579 20.4142C2 19.8284 2 18.8856 2 17Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path opacity="0.5"
-                                            d="M2 6C2 4.11438 2 3.17157 2.58579 2.58579C3.17157 2 4.11438 2 6 2H18C19.8856 2 20.8284 2 21.4142 2.58579C22 3.17157 22 4.11438 22 6C22 7.88562 22 8.82843 21.4142 9.41421C20.8284 10 19.8856 10 18 10H6C4.11438 10 3.17157 10 2.58579 9.41421C2 8.82843 2 7.88562 2 6Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path d="M11 6H18" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M6 6H8" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M11 17H18" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M6 17H8" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                    </svg>
+                                <svg class="shrink-0 group-hover:!text-primary" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M6.94028 2C7.35614 2 7.69326 2.32421 7.69326 2.72414V4.18487C8.36117 4.17241 9.10983 4.17241 9.95219 4.17241H13.9681C14.8104 4.17241 15.5591 4.17241 16.227 4.18487V2.72414C16.227 2.32421 16.5641 2 16.98 2C17.3958 2 17.733 2.32421 17.733 2.72414V4.24894C19.178 4.36022 20.1267 4.63333 20.8236 5.30359C21.5206 5.97385 21.8046 6.88616 21.9203 8.27586L22 9H2.92456H2V8.27586C2.11571 6.88616 2.3997 5.97385 3.09665 5.30359C3.79361 4.63333 4.74226 4.36022 6.1873 4.24894V2.72414C6.1873 2.32421 6.52442 2 6.94028 2Z" fill="currentColor"></path>
+                                                    <path opacity="0.5" d="M21.9995 14.0001V12.0001C21.9995 11.161 21.9963 9.66527 21.9834 9H2.00917C1.99626 9.66527 1.99953 11.161 1.99953 12.0001V14.0001C1.99953 17.7713 1.99953 19.6569 3.1711 20.8285C4.34267 22.0001 6.22829 22.0001 9.99953 22.0001H13.9995C17.7708 22.0001 19.6564 22.0001 20.828 20.8285C21.9995 19.6569 21.9995 17.7713 21.9995 14.0001Z" fill="currentColor"></path>
+                                                </svg>
                                     <span
                                         class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Event
                                     </span>
@@ -243,23 +214,10 @@ if (!isset($_SESSION["adminlogin"])) {
                             <a href="certificates.php"
                                 class="nav-link group <?php echo basename($_SERVER["PHP_SELF"]) == "certificates.php" ? "active" : "" ?>">
                                 <div class="flex items-center">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
-                                        <path opacity="0.5"
-                                            d="M2 17C2 15.1144 2 14.1716 2.58579 13.5858C3.17157 13 4.11438 13 6 13H18C19.8856 13 20.8284 13 21.4142 13.5858C22 14.1716 22 15.1144 22 17C22 18.8856 22 19.8284 21.4142 20.4142C20.8284 21 19.8856 21 18 21H6C4.11438 21 3.17157 21 2.58579 20.4142C2 19.8284 2 18.8856 2 17Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path opacity="0.5"
-                                            d="M2 6C2 4.11438 2 3.17157 2.58579 2.58579C3.17157 2 4.11438 2 6 2H18C19.8856 2 20.8284 2 21.4142 2.58579C22 3.17157 22 4.11438 22 6C22 7.88562 22 8.82843 21.4142 9.41421C20.8284 10 19.8856 10 18 10H6C4.11438 10 3.17157 10 2.58579 9.41421C2 8.82843 2 7.88562 2 6Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path d="M11 6H18" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M6 6H8" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M11 17H18" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M6 17H8" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                    </svg>
+                                <svg class="shrink-0 group-hover:!text-primary" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4 4.69434V18.6943C4 20.3512 5.34315 21.6943 7 21.6943H17C18.6569 21.6943 20 20.3512 20 18.6943V8.69434C20 7.03748 18.6569 5.69434 17 5.69434H5C4.44772 5.69434 4 5.24662 4 4.69434ZM7.25 11.6943C7.25 11.2801 7.58579 10.9443 8 10.9443H16C16.4142 10.9443 16.75 11.2801 16.75 11.6943C16.75 12.1085 16.4142 12.4443 16 12.4443H8C7.58579 12.4443 7.25 12.1085 7.25 11.6943ZM7.25 15.1943C7.25 14.7801 7.58579 14.4443 8 14.4443H13.5C13.9142 14.4443 14.25 14.7801 14.25 15.1943C14.25 15.6085 13.9142 15.9443 13.5 15.9443H8C7.58579 15.9443 7.25 15.6085 7.25 15.1943Z" fill="currentColor"></path>
+                                            <path opacity="0.5" d="M18 4.00038V5.86504C17.6872 5.75449 17.3506 5.69434 17 5.69434H5C4.44772 5.69434 4 5.24662 4 4.69434V4.62329C4 4.09027 4.39193 3.63837 4.91959 3.56299L15.7172 2.02048C16.922 1.84835 18 2.78328 18 4.00038Z" fill="currentColor"></path>
+                                        </svg>
                                     <span
                                         class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Certificates
                                     </span>
@@ -270,23 +228,10 @@ if (!isset($_SESSION["adminlogin"])) {
                             <a href="donation_details.php"
                                 class="nav-link group <?php echo basename($_SERVER["PHP_SELF"]) == "donation_details.php" ? "active" : "" ?>">
                                 <div class="flex items-center">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
-                                        <path opacity="0.5"
-                                            d="M2 17C2 15.1144 2 14.1716 2.58579 13.5858C3.17157 13 4.11438 13 6 13H18C19.8856 13 20.8284 13 21.4142 13.5858C22 14.1716 22 15.1144 22 17C22 18.8856 22 19.8284 21.4142 20.4142C20.8284 21 19.8856 21 18 21H6C4.11438 21 3.17157 21 2.58579 20.4142C2 19.8284 2 18.8856 2 17Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path opacity="0.5"
-                                            d="M2 6C2 4.11438 2 3.17157 2.58579 2.58579C3.17157 2 4.11438 2 6 2H18C19.8856 2 20.8284 2 21.4142 2.58579C22 3.17157 22 4.11438 22 6C22 7.88562 22 8.82843 21.4142 9.41421C20.8284 10 19.8856 10 18 10H6C4.11438 10 3.17157 10 2.58579 9.41421C2 8.82843 2 7.88562 2 6Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path d="M11 6H18" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M6 6H8" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M11 17H18" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M6 17H8" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                    </svg>
+                                <svg class="shrink-0 group-hover:!text-primary" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.5" fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" fill="currentColor"></path>
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 5.25C12.4142 5.25 12.75 5.58579 12.75 6V6.31673C14.3804 6.60867 15.75 7.83361 15.75 9.5C15.75 9.91421 15.4142 10.25 15 10.25C14.5858 10.25 14.25 9.91421 14.25 9.5C14.25 8.82154 13.6859 8.10339 12.75 7.84748V11.3167C14.3804 11.6087 15.75 12.8336 15.75 14.5C15.75 16.1664 14.3804 17.3913 12.75 17.6833V18C12.75 18.4142 12.4142 18.75 12 18.75C11.5858 18.75 11.25 18.4142 11.25 18V17.6833C9.61957 17.3913 8.25 16.1664 8.25 14.5C8.25 14.0858 8.58579 13.75 9 13.75C9.41421 13.75 9.75 14.0858 9.75 14.5C9.75 15.1785 10.3141 15.8966 11.25 16.1525V12.6833C9.61957 12.3913 8.25 11.1664 8.25 9.5C8.25 7.83361 9.61957 6.60867 11.25 6.31673V6C11.25 5.58579 11.5858 5.25 12 5.25ZM11.25 7.84748C10.3141 8.10339 9.75 8.82154 9.75 9.5C9.75 10.1785 10.3141 10.8966 11.25 11.1525V7.84748ZM14.25 14.5C14.25 13.8215 13.6859 13.1034 12.75 12.8475V16.1525C13.6859 15.8966 14.25 15.1785 14.25 14.5Z" fill="currentColor"></path>
+                                                </svg>
                                     <span
                                         class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Donation
                                     </span>
@@ -297,23 +242,12 @@ if (!isset($_SESSION["adminlogin"])) {
                             <a href="videos.php"
                                 class="nav-link group <?php echo basename($_SERVER["PHP_SELF"]) == "videos.php" ? "active" : "" ?>">
                                 <div class="flex items-center">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
-                                        <path opacity="0.5"
-                                            d="M2 17C2 15.1144 2 14.1716 2.58579 13.5858C3.17157 13 4.11438 13 6 13H18C19.8856 13 20.8284 13 21.4142 13.5858C22 14.1716 22 15.1144 22 17C22 18.8856 22 19.8284 21.4142 20.4142C20.8284 21 19.8856 21 18 21H6C4.11438 21 3.17157 21 2.58579 20.4142C2 19.8284 2 18.8856 2 17Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path opacity="0.5"
-                                            d="M2 6C2 4.11438 2 3.17157 2.58579 2.58579C3.17157 2 4.11438 2 6 2H18C19.8856 2 20.8284 2 21.4142 2.58579C22 3.17157 22 4.11438 22 6C22 7.88562 22 8.82843 21.4142 9.41421C20.8284 10 19.8856 10 18 10H6C4.11438 10 3.17157 10 2.58579 9.41421C2 8.82843 2 7.88562 2 6Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path d="M11 6H18" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M6 6H8" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M11 17H18" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M6 17H8" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                    </svg>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M14.8412 8.09511L18.2487 7.18208C18.4731 7.12195 18.5853 7.09188 18.6736 7.04832C19.0364 6.86943 19.2557 6.48964 19.2292 6.08604C19.2228 5.98776 19.1927 5.87556 19.1326 5.65114C18.9522 4.97791 18.862 4.64129 18.7313 4.37629C18.1946 3.28804 17.0553 2.63022 15.8445 2.70958C15.7213 2.71766 15.5907 2.73811 15.4314 2.77235C15.4505 2.85465 15.4558 2.94159 15.4452 3.0303L14.8412 8.09511Z" fill="currentColor"></path>
+                                                <path d="M9.15025 4.44361L13.9184 3.16598L13.318 8.19993C13.3058 8.30276 13.3149 8.40322 13.342 8.49682L8.56266 9.77744L9.16673 4.71262C9.17779 4.61993 9.17143 4.52917 9.15025 4.44361Z" fill="currentColor"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 11H4V16C4 18.8284 4 20.2426 4.87868 21.1213C5.75736 22 7.17157 22 10 22H14C16.8284 22 18.2426 22 19.1213 21.1213C20 20.2426 20 18.8284 20 16V15C20 13.1144 20 12.1716 19.4142 11.5858C18.8284 11 17.8856 11 16 11ZM12.8084 15.2235C13.6028 15.793 14 16.0778 14 16.5C14 16.9222 13.6028 17.207 12.8084 17.7765C12.0031 18.3538 11.6005 18.6425 11.3002 18.4305C11 18.2186 11 17.6457 11 16.5C11 15.3543 11 14.7814 11.3002 14.5695C11.6005 14.3575 12.0031 14.6462 12.8084 15.2235Z" fill="currentColor"></path>
+                                                <path d="M7.03953 9.88225C7.02727 9.98509 7.03643 10.0855 7.06349 10.1791L4.00128 10.9997C3.51749 9.19412 3.27559 8.29135 3.48364 7.51489C3.61994 7.00623 3.88773 6.5424 4.2601 6.17003C4.82851 5.60162 5.73128 5.35973 7.53682 4.87593L7.63992 4.84831L7.03953 9.88225Z" fill="currentColor"></path>
+                                            </svg>
                                     <span
                                         class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Videos
                                     </span>
@@ -324,21 +258,10 @@ if (!isset($_SESSION["adminlogin"])) {
                             <a href="contact.php"
                                 class="nav-link group <?php echo basename($_SERVER["PHP_SELF"]) == "contact.php" ? "active" : "" ?>">
                                 <div class="flex items-center">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
-                                        <path opacity="0.5"
-                                            d="M16 4.00195C18.175 4.01406 19.3529 4.11051 20.1213 4.87889C21 5.75757 21 7.17179 21 10.0002V16.0002C21 18.8286 21 20.2429 20.1213 21.1215C19.2426 22.0002 17.8284 22.0002 15 22.0002H9C6.17157 22.0002 4.75736 22.0002 3.87868 21.1215C3 20.2429 3 18.8286 3 16.0002V10.0002C3 7.17179 3 5.75757 3.87868 4.87889C4.64706 4.11051 5.82497 4.01406 8 4.00195"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path d="M8 14H16" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M7 10.5H17" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M9 17.5H15" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path
-                                            d="M8 3.5C8 2.67157 8.67157 2 9.5 2H14.5C15.3284 2 16 2.67157 16 3.5V4.5C16 5.32843 15.3284 6 14.5 6H9.5C8.67157 6 8 5.32843 8 4.5V3.5Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                    </svg>
+                                <svg class="shrink-0 group-hover:!text-primary" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.5" d="M19.7165 20.3624C21.143 19.5846 22 18.5873 22 17.5C22 16.3475 21.0372 15.2961 19.4537 14.5C17.6226 13.5794 14.9617 13 12 13C9.03833 13 6.37738 13.5794 4.54631 14.5C2.96285 15.2961 2 16.3475 2 17.5C2 18.6525 2.96285 19.7039 4.54631 20.5C6.37738 21.4206 9.03833 22 12 22C15.1066 22 17.8823 21.3625 19.7165 20.3624Z" fill="currentColor"></path>
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5 8.51464C5 4.9167 8.13401 2 12 2C15.866 2 19 4.9167 19 8.51464C19 12.0844 16.7658 16.2499 13.2801 17.7396C12.4675 18.0868 11.5325 18.0868 10.7199 17.7396C7.23416 16.2499 5 12.0844 5 8.51464ZM12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11Z" fill="currentColor"></path>
+                                                </svg>
                                     <span
                                         class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Contact
                                     </span>
@@ -375,21 +298,29 @@ if (!isset($_SESSION["adminlogin"])) {
                             <a href="privacy_policy.php"
                                 class="nav-link group <?php echo basename($_SERVER["PHP_SELF"]) == "privacy_policy.php" ? "active" : "" ?>">
                                 <div class="flex items-center">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
-                                        <path opacity="0.5"
-                                            d="M16 4.00195C18.175 4.01406 19.3529 4.11051 20.1213 4.87889C21 5.75757 21 7.17179 21 10.0002V16.0002C21 18.8286 21 20.2429 20.1213 21.1215C19.2426 22.0002 17.8284 22.0002 15 22.0002H9C6.17157 22.0002 4.75736 22.0002 3.87868 21.1215C3 20.2429 3 18.8286 3 16.0002V10.0002C3 7.17179 3 5.75757 3.87868 4.87889C4.64706 4.11051 5.82497 4.01406 8 4.00195"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                        <path d="M8 14H16" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M7 10.5H17" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path d="M9 17.5H15" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round"></path>
-                                        <path
-                                            d="M8 3.5C8 2.67157 8.67157 2 9.5 2H14.5C15.3284 2 16 2.67157 16 3.5V4.5C16 5.32843 15.3284 6 14.5 6H9.5C8.67157 6 8 5.32843 8 4.5V3.5Z"
-                                            stroke="currentColor" stroke-width="1.5"></path>
-                                    </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                fill="none">
+                                                <g opacity="0.5">
+                                                    <path
+                                                        d="M14 2.75C15.9068 2.75 17.2615 2.75159 18.2892 2.88976C19.2952 3.02503 19.8749 3.27869 20.2981 3.7019C20.7852 4.18904 20.9973 4.56666 21.1147 5.23984C21.2471 5.9986 21.25 7.08092 21.25 9C21.25 9.41422 21.5858 9.75 22 9.75C22.4142 9.75 22.75 9.41422 22.75 9L22.75 8.90369C22.7501 7.1045 22.7501 5.88571 22.5924 4.98199C22.417 3.97665 22.0432 3.32568 21.3588 2.64124C20.6104 1.89288 19.6615 1.56076 18.489 1.40314C17.3498 1.24997 15.8942 1.24998 14.0564 1.25H14C13.5858 1.25 13.25 1.58579 13.25 2C13.25 2.41421 13.5858 2.75 14 2.75Z"
+                                                        fill="#1C274C" />
+                                                    <path
+                                                        d="M2.00001 14.25C2.41422 14.25 2.75001 14.5858 2.75001 15C2.75001 16.9191 2.75289 18.0014 2.88529 18.7602C3.00275 19.4333 3.21477 19.811 3.70191 20.2981C4.12512 20.7213 4.70476 20.975 5.71085 21.1102C6.73852 21.2484 8.09318 21.25 10 21.25C10.4142 21.25 10.75 21.5858 10.75 22C10.75 22.4142 10.4142 22.75 10 22.75H9.94359C8.10583 22.75 6.6502 22.75 5.51098 22.5969C4.33856 22.4392 3.38961 22.1071 2.64125 21.3588C1.95681 20.6743 1.58304 20.0233 1.40762 19.018C1.24992 18.1143 1.24995 16.8955 1.25 15.0964L1.25001 15C1.25001 14.5858 1.58579 14.25 2.00001 14.25Z"
+                                                        fill="#1C274C" />
+                                                    <path
+                                                        d="M22 14.25C22.4142 14.25 22.75 14.5858 22.75 15L22.75 15.0963C22.7501 16.8955 22.7501 18.1143 22.5924 19.018C22.417 20.0233 22.0432 20.6743 21.3588 21.3588C20.6104 22.1071 19.6615 22.4392 18.489 22.5969C17.3498 22.75 15.8942 22.75 14.0564 22.75H14C13.5858 22.75 13.25 22.4142 13.25 22C13.25 21.5858 13.5858 21.25 14 21.25C15.9068 21.25 17.2615 21.2484 18.2892 21.1102C19.2952 20.975 19.8749 20.7213 20.2981 20.2981C20.7852 19.811 20.9973 19.4333 21.1147 18.7602C21.2471 18.0014 21.25 16.9191 21.25 15C21.25 14.5858 21.5858 14.25 22 14.25Z"
+                                                        fill="#1C274C" />
+                                                    <path
+                                                        d="M9.94359 1.25H10C10.4142 1.25 10.75 1.58579 10.75 2C10.75 2.41421 10.4142 2.75 10 2.75C8.09319 2.75 6.73852 2.75159 5.71085 2.88976C4.70476 3.02503 4.12512 3.27869 3.70191 3.7019C3.21477 4.18904 3.00275 4.56666 2.88529 5.23984C2.75289 5.9986 2.75001 7.08092 2.75001 9C2.75001 9.41422 2.41422 9.75 2.00001 9.75C1.58579 9.75 1.25001 9.41422 1.25001 9L1.25 8.90369C1.24995 7.10453 1.24992 5.8857 1.40762 4.98199C1.58304 3.97665 1.95681 3.32568 2.64125 2.64124C3.38961 1.89288 4.33856 1.56076 5.51098 1.40314C6.65019 1.24997 8.10584 1.24998 9.94359 1.25Z"
+                                                        fill="#1C274C" />
+                                                </g>
+                                                <path
+                                                    d="M12 10.75C11.3096 10.75 10.75 11.3096 10.75 12C10.75 12.6904 11.3096 13.25 12 13.25C12.6904 13.25 13.25 12.6904 13.25 12C13.25 11.3096 12.6904 10.75 12 10.75Z"
+                                                    fill="#1C274C" />
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M5.89243 14.0598C5.29747 13.3697 5 13.0246 5 12C5 10.9754 5.29748 10.6303 5.89242 9.94021C7.08037 8.56222 9.07268 7 12 7C14.9273 7 16.9196 8.56222 18.1076 9.94021C18.7025 10.6303 19 10.9754 19 12C19 13.0246 18.7025 13.3697 18.1076 14.0598C16.9196 15.4378 14.9273 17 12 17C9.07268 17 7.08038 15.4378 5.89243 14.0598ZM9.25 12C9.25 10.4812 10.4812 9.25 12 9.25C13.5188 9.25 14.75 10.4812 14.75 12C14.75 13.5188 13.5188 14.75 12 14.75C10.4812 14.75 9.25 13.5188 9.25 12Z"
+                                                    fill="#1C274C" />
+                                            </svg>
                                     <span
                                         class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Privacy Policy
                                     </span>
