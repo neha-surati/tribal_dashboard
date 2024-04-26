@@ -168,7 +168,24 @@ if (isset($_REQUEST["update"])) {
                         <label for="phone_no">Phone Number</label>
                         <div>
                             <div class="flex">
-                                <div class="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-[#e0e6ed] dark:border-[#17263c] dark:bg-[#1b2e4b]">+91</div>
+                                <!-- <div class="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-[#e0e6ed] dark:border-[#17263c] dark:bg-[#1b2e4b]">+</div> -->
+                                <select class="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-1 font-semibold border ltr:border-r-0 rtl:border-l-0 border-[#e0e6ed] dark:border-[#17263c] dark:bg-[#1b2e4b]" name="country_code" id="country_code" <?php echo isset($mode) && $mode == 'view' ? 'disabled' : '' ?> required onchange="fillState(this.value)">
+                                <option value="101">+ 91</option>
+                                <?php
+                                $stmt = $obj->con1->prepare("SELECT * FROM countries");
+                                $stmt->execute();
+                                $Resp = $stmt->get_result();
+                                $stmt->close();
+
+                                while ($result = mysqli_fetch_array($Resp)) {
+                                ?>
+                                    <option value="<?php echo $result["id"]; ?>" <?php echo (isset($mode) && $data["country_id"] == $result["id"]) ? "selected" : ""; ?>>
+                                        + <?php echo $result["phonecode"]; ?>
+                                    </option>
+                                <?php
+                                }
+                                ?>
+                            </select>    
                                 <input id="phone_no" name="phone_no" type="text" placeholder="Enter  Phone Number" class="form-input ltr:rounded-l-none rtl:rounded-r-none" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="10" value="<?php echo (isset($mode)) ? $data['phone_no'] : '' ?>" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> />
                             </div>
                         </div>
@@ -183,45 +200,12 @@ if (isset($_REQUEST["update"])) {
                         <div>
                             <label for="groupFname">State Name</label>
                             <select class="form-select text-black" name="state" id="state" <?php echo isset($mode) && $mode == 'view' ? 'disabled' : '' ?> required onchange="fillCity(this.value)">
-                                <option value="">Select State</option>
-                                <?php
-                                $stmt = $obj->con1->prepare("SELECT * FROM state");
-                                $stmt->execute();
-                                $Resp = $stmt->get_result();
-                                $stmt->close();
-
-                                while ($result = mysqli_fetch_array($Resp)) {
-                                ?>
-                                    <option value="<?php echo $result["id"]; ?>" <?php echo (isset($mode) && $data["state"] == $result["id"]) ? "selected" : ""; ?>>
-                                        <?php echo $result["name"]; ?>
-                                    </option>
-                                <?php
-                                }
-                                ?>
                             </select>
                         </div>
                     </div>
                     <div>
                         <label for="city">City</label>
                         <select class="form-select text-black" name="city" id="city" <?php echo isset($mode) && $mode == 'view' ? 'disabled' : '' ?> required>
-
-                            <?php
-                            if (isset($mode)) {
-                                $s = $data["state"];
-                                $stmt = $obj->con1->prepare("select * from city WHERE state_id=?");
-                                $stmt->bind_param("i", $s);
-                                $stmt->execute();
-                                $res = $stmt->get_result();
-                                $stmt->close();
-                                while ($result = mysqli_fetch_array($res)) {
-                            ?>
-                                    <option value="<?php echo $result["id"]; ?>" <?php echo (isset($mode) && $data["city"] == $result["id"]) ? "selected" : ""; ?>>
-                                        <?php echo $result["city_nm"]; ?>
-                                    </option>
-                            <?php
-                                }
-                            }
-                            ?>
                         </select>
                     </div>
                     <div>
@@ -318,6 +302,14 @@ if (isset($_REQUEST["update"])) {
         xhttp.send();
         xhttp.onload = function() {
             document.getElementById("city").innerHTML = xhttp.responseText;
+        }
+    }
+    function fillState(cntrid) {
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "getstate.php?cntrid=" + cntrid);
+        xhttp.send();
+        xhttp.onload = function() {
+            document.getElementById("state").innerHTML = xhttp.responseText;
         }
     }
 </script>

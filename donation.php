@@ -31,13 +31,14 @@ if (isset($_REQUEST["save"])) {
     $email = $_REQUEST["email"];
     $country = $_REQUEST["country"];
     $reason = $_REQUEST["reason"];
-
+    $currency = $_REQUEST["currency"];
+    $amount = $_REQUEST["amount"];
 
     try {
         $stmt = $obj->con1->prepare(
-            "INSERT INTO `donation`(`firstname`, `lastname`,`phone_no`, `email`, `country`, `reason`) VALUES (?,?,?,?,?,?)"
+            "INSERT INTO `donation`(`firstname`, `lastname`,`phone_no`, `email`, `country`, `reason`,`currency`,`amount`) VALUES (?,?,?,?,?,?,?,?)"
         );
-        $stmt->bind_param("ssisss", $firstname, $lastname, $phone_no, $email, $country, $reason);
+        $stmt->bind_param("ssisssss", $firstname, $lastname, $phone_no, $email, $country, $reason, $currency, $amount);
         $Resp = $stmt->execute();
         if (!$Resp) {
             throw new Exception(
@@ -65,14 +66,16 @@ if (isset($_REQUEST["update"])) {
     $email = $_REQUEST["email"];
     $country = $_REQUEST["country"];
     $reason = $_REQUEST["reason"];
+    $currency = $_REQUEST["currency"];
+    $amount = $_REQUEST["amount"];
     $editId = $_COOKIE["edit_id"];
 
     try {
         $stmt = $obj->con1->prepare(
-            "UPDATE `donation` SET `firstname`='?',`lastname`='?',`phone_no`='?',`email`='?',`country`='?',`reason`='?' WHERE `id`='?'"
+            "UPDATE `donation` SET `firstname`='?', `lastname`='?', `phone_no`='?', `email`='?', `country`='?', `reason`='?', `currency`='?', `amount`='?' WHERE `id`='?'"
         );
         //echo "UPDATE `registration` SET `firstname`=$firstname,`lastname`=$lastname,`dob`=$dob,`gender`=$gender,`phone_no`=$phone_no,`email`=$email,`marital_status`=$marital_s,`state`=$state,`city`=$city,`pincode`=$pincode,`occupation`=$occupation,`blood_group`=$blood_g,`password`=$password WHERE `id`=$editId";
-        $stmt->bind_param("ssisssi", $firstname, $lastname, $phone_no, $email, $country, $reason, $editId);
+        $stmt->bind_param("ssisssssi", $firstname, $lastname, $phone_no, $email, $country, $reason, $currency, $amount, $editId);
 
         $Resp = $stmt->execute();
         if (!$Resp) {
@@ -133,23 +136,32 @@ if (isset($_REQUEST["update"])) {
                         <input id="email" name="email" type="text" class="form-input" placeholder="Enter your Email" value="<?php echo (isset($mode)) ? $data['email'] : '' ?>" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> />
                     </div>
                 </div>
-                        <div>
-                        <label for="inputCountry">Country</label>
-                                <select id="inputCountry" class="form-select" name="country">
-                                    <option selected>Select Country</option>
-                                    <option value="India" <?php echo isset($data) && $data['country'] == "India" ? "selected" : "" ?>>India</option>
-                                    <option value="Japan" <?php echo isset($data) && $data['country'] == "Japan" ? "selected" : "" ?>>Japan</option>
-                                    <option value="China" <?php echo isset($data) && $data['country'] == "China" ? "selected" : "" ?>>China</option>
-                                    <option value="Germany" <?php echo isset($data) && $data['country'] == "Germany" ? "selected" : "" ?>>Germany</option>
-                                </select>
-                        </div>
-                        <div>
-                            <label for="exampleInputReason">Reason</label>
-                            <textarea class="form-input" name="reason" id="message" cols="30" rows="9" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?>
-                                placeholder="Enter Message"><?php echo (isset($mode)) ? $data['reason'] : '' ?></textarea>
-                        </div>
+                <div>
+                    <label for="inputCountry">Country</label>
+                    <select id="inputCountry" class="form-select" name="country">
+                        <option selected>Select Country</option>
+                        <option value="India" <?php echo isset($data) && $data['country'] == "India" ? "selected" : "" ?>>India</option>
+                        <option value="Japan" <?php echo isset($data) && $data['country'] == "Japan" ? "selected" : "" ?>>Japan</option>
+                        <option value="China" <?php echo isset($data) && $data['country'] == "China" ? "selected" : "" ?>>China</option>
+                        <option value="Germany" <?php echo isset($data) && $data['country'] == "Germany" ? "selected" : "" ?>>Germany</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="exampleInputReason">Reason</label>
+                    <textarea class="form-input" name="reason" id="message" cols="30" rows="9" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> placeholder="Enter Message"><?php echo (isset($mode)) ? $data['reason'] : '' ?></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+                    <div>
+                        <label for="currency">First Name</label>
+                        <input id="currency" name="currency" type="text" class="form-input" placeholder="Enter your currency" value="<?php echo (isset($mode)) ? $data['currency'] : '' ?>" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> />
+                    </div>
+                    <div>
+                        <label for="amount">Last Name</label>
+                        <input id="amount" name="amount" type="text" class="form-input" placeholder="Enter amount" value="<?php echo (isset($mode)) ? $data['amount'] : '' ?>" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> />
+                    </div>
+                </div>
                 <div class="relative inline-flex align-middle gap-3 mt-4 ">
-                    <button type="submit" name="<?php echo isset($mode) && $mode == 'edit' ? 'update' : 'save' ?>" id="save" class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : '' ?>" >
+                    <button type="submit" name="<?php echo isset($mode) && $mode == 'edit' ? 'update' : 'save' ?>" id="save" class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : '' ?>">
                         <?php echo isset($mode) && $mode == 'edit' ? 'Update' : 'Save' ?>
                     </button>
                     <button type="button" class="btn btn-danger" onclick="javascript:go_back()">Close</button>
@@ -160,10 +172,10 @@ if (isset($_REQUEST["update"])) {
 </div>
 
 <script type="text/javascript">
-    $( document ).ready(function() {
+    $(document).ready(function() {
         eraseCookie("edit_id");
         eraseCookie("view_id");
-});
+    });
     checkCookies();
 
     function go_back() {
