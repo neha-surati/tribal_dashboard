@@ -71,7 +71,7 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
                                     '<?php echo addslashes($row["name"]); ?>',
                                     '<?php echo addslashes($row["email"]); ?>',
                                     '<?php echo addslashes($row["phone_no"]); ?>',
-                                    '<?php echo addslashes($row["message"]); ?>',
+                                    "'<?php echo $row["message"]; ?>'",
                                     '<?php echo date('d-m-Y',strtotime($row["date_time"])); ?>',
                                     getActions(<?php echo $row["id"]; ?>)
                                 ],

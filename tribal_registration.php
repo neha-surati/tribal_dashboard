@@ -1,5 +1,4 @@
 <?php
-//registration of tribal welfare by harsh - 26/02/2024
 include "header.php";
 
 if (isset($_COOKIE["view_id"])) {
@@ -32,6 +31,7 @@ if (isset($_REQUEST["save"])) {
     $phone_no = $_REQUEST["phone_no"];
     $email = $_REQUEST["email"];
     $marital_s = $_REQUEST["marital_s"];
+    $country = $_REQUEST["country"];
     $state = $_REQUEST["state"];
     $city = $_REQUEST["city"];
     $pincode = $_REQUEST["pincode"];
@@ -42,10 +42,8 @@ if (isset($_REQUEST["save"])) {
 
     if ($password == $confirm_password) {
         try {
-            $stmt = $obj->con1->prepare(
-                "INSERT INTO `registration`(`firstname`, `lastname`, `dob`, `gender`, `phone_no`, `email`, `marital_status`, `state`, `city`, `pincode`, `occupation`, `blood_group`,`password`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
-            );
-            $stmt->bind_param("ssssisssissss", $firstname, $lastname, $dob, $gender, $phone_no, $email, $marital_s, $state, $city, $pincode, $occupation, $blood_g, $password);
+            $stmt = $obj->con1->prepare("INSERT INTO `registration`(`firstname`, `lastname`, `dob`, `gender`, `phone_no`, `email`, `marital_status`,`country_id`, `state_id`, `city_id`, `pincode`, `occupation`, `blood_group`,`password`) VALUES  (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt->bind_param("sssssssiiissss", $firstname, $lastname, $dob, $gender, $phone_no, $email, $marital_s, $country, $state, $city, $pincode, $occupation, $blood_g, $password);
             $Resp = $stmt->execute();
             if (!$Resp) {
                 throw new Exception(
@@ -59,14 +57,14 @@ if (isset($_REQUEST["save"])) {
 
         if ($Resp) {
             setcookie("msg", "data", time() + 3600, "/");
-            header("location:user_details.php");
+             header("location:user_details.php");
         } else {
             setcookie("msg", "fail", time() + 3600, "/");
-            header("location:user_details.php");
+             header("location:user_details.php");
         }
     } else {
         setcookie("msg", "fail", time() + 3600, "/");
-        header("location:tribal_registration.php");
+         header("location:tribal_registration.php");
     }
 }
 
@@ -78,6 +76,7 @@ if (isset($_REQUEST["update"])) {
     $phone_no = $_REQUEST["phone_no"];
     $email = $_REQUEST["email"];
     $marital_s = $_REQUEST["marital_s"];
+    $country = $_REQUEST["country"];
     $state = $_REQUEST["state"];
     $city = $_REQUEST["city"];
     $pincode = $_REQUEST["pincode"];
@@ -86,32 +85,32 @@ if (isset($_REQUEST["update"])) {
     $password = $_REQUEST["password"];
     $editId = $_COOKIE["edit_id"];
 
+    // echo "UPDATE `registration` SET `firstname`=$firstname,`lastname`=$lastname,`dob`=$dob,`gender`=$gender,`phone_no`=$phone_no,`email`=$email,`marital_status`=$marital_s,`country_id`=$country, `state_id`=$state,`city_id`=$city,`pincode`=$pincode,`occupation`=$occupation,`blood_group`=$blood_g,`password`=$password WHERE `id`= $editId";
+
     try {
         $stmt = $obj->con1->prepare(
-            "UPDATE `registration` SET `firstname`=?,`lastname`=?,`dob`=?,`gender`=?,`phone_no`=?,`email`=?,`marital_status`=?,`state`=?,`city`=?,`pincode`=?,`occupation`=?,`blood_group`=?,`password`=? WHERE `id`=?"
+            "UPDATE `registration` SET `firstname`=?,`lastname`=?,`dob`=?,`gender`=?,`phone_no`=?,`email`=?,`marital_status`=?,`country_id`=?, `state_id`=?,`city_id`=?,`pincode`=?,`occupation`=?,`blood_group`=?,`password`=? WHERE `id`=?"
         );
-        // echo "UPDATE `registration` SET `firstname`=$firstname,`lastname`=$lastname,`dob`=$dob,`gender`=$gender,`phone_no`=$phone_no,`email`=$email,`marital_status`=$marital_s,`state`=$state,`city`=$city,`pincode`=$pincode,`occupation`=$occupation,`blood_group`=$blood_g,`password`=$password WHERE `id`=$editId";
-        $stmt->bind_param("ssssisssissssi", $firstname, $lastname, $dob, $gender, $phone_no, $email, $marital_s, $state, $city, $pincode, $occupation, $blood_g, $password, $editId);
+        $stmt->bind_param("sssssssiiissssi", $firstname, $lastname, $dob, $gender, $phone_no, $email, $marital_s, $country, $state, $city, $pincode, $occupation, $blood_g, $password, $editId);
 
         $Resp = $stmt->execute();
         if (!$Resp) {
             throw new Exception(
                 "Problem in adding! " . strtok($obj->con1->error, "(")
             );
-            
         }
         $stmt->close();
-        
     } catch (\Exception $e) {
         setcookie("sql_error", urlencode($e->getMessage()), time() + 3600, "/");
     }
 
     if ($Resp) {
+        setcookie("edit_id", "", time() - 3600, "/");
         setcookie("msg", "update", time() + 3600, "/");
-        header("location:user_details.php");
+        // header("location:user_details.php");
     } else {
         setcookie("msg", "fail", time() + 3600, "/");
-        header("location:user_details.php");
+        // header("location:user_details.php");
     }
 }
 
@@ -146,20 +145,26 @@ if (isset($_REQUEST["update"])) {
                         <input id="dob" name="dob" type="date" class="form-input" value="<?php echo (isset($mode)) ? $data['dob'] : '' ?>" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> />
                     </div>
                     <div>
-                        <label for="gender">Gender</label>
-                        <div class="flex gap-8 items-center mt-3">
-                            <div>
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="gender" id="male" class="form-radio" value="male" <?php echo (isset($mode) && $data['gender'] == "male") ? "checked" : "" ?> />
-                                    <span class="text-black">Male</span>
-                                </label>
-                            </div>
-                            <div>
-                                <label class=" flex items-center cursor-pointer">
-                                    <input type="radio" name="gender" id="female" class="form-radio" value="female" <?php echo (isset($mode) && $data['gender'] == "female") ? "checked" : "" ?> />
-                                    <span class="text-black">Female</span>
-                                </label>
-                            </div>
+                        <div>
+                            <label for="groupFname">Country</label>
+                            <select class="form-select text-black" name="country" id="country" <?php echo isset($mode) && $mode == 'view' ? 'disabled' : '' ?> required onchange="fillState(this.value)">
+                                <option value="">Choose country</option>
+                                <?php
+                                $stmt = $obj->con1->prepare("SELECT * FROM countries ");
+                                $stmt->bind_param();
+                                $stmt->execute();
+                                $Resp = $stmt->get_result();
+                                $stmt->close();
+
+                                while ($result = mysqli_fetch_array($Resp)) {
+                                ?>
+                                    <option value="<?php echo $result["id"]; ?>" <?php echo (isset($mode) && $data["country_id"] == $result["id"]) ? "selected" : ""; ?>>
+                                        <?php echo $result["name"]; ?>
+                                    </option>
+                                <?php
+                                }
+                                ?>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -168,25 +173,8 @@ if (isset($_REQUEST["update"])) {
                         <label for="phone_no">Phone Number</label>
                         <div>
                             <div class="flex">
-                                <!-- <div class="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-[#e0e6ed] dark:border-[#17263c] dark:bg-[#1b2e4b]">+</div> -->
-                                <select class="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-1 font-semibold border ltr:border-r-0 rtl:border-l-0 border-[#e0e6ed] dark:border-[#17263c] dark:bg-[#1b2e4b]" name="country_code" id="country_code" <?php echo isset($mode) && $mode == 'view' ? 'disabled' : '' ?> required onchange="fillState(this.value)">
-                                <option value="101">+ 91</option>
-                                <?php
-                                $stmt = $obj->con1->prepare("SELECT * FROM countries");
-                                $stmt->execute();
-                                $Resp = $stmt->get_result();
-                                $stmt->close();
-
-                                while ($result = mysqli_fetch_array($Resp)) {
-                                ?>
-                                    <option value="<?php echo $result["id"]; ?>" <?php echo (isset($mode) && $data["country_id"] == $result["id"]) ? "selected" : ""; ?>>
-                                        + <?php echo $result["phonecode"]; ?>
-                                    </option>
-                                <?php
-                                }
-                                ?>
-                            </select>    
-                                <input id="phone_no" name="phone_no" type="text" placeholder="Enter  Phone Number" class="form-input ltr:rounded-l-none rtl:rounded-r-none" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="10" value="<?php echo (isset($mode)) ? $data['phone_no'] : '' ?>" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> />
+                                <input type="text" readonly value="+91" class="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-[#e0e6ed] dark:border-[#17263c] dark:bg-[#1b2e4b]" name="country_code" id="country_code" />
+                                <input id="phone_no" name="phone_no" type="text" placeholder="Enter Phone Number" class="form-input ltr:rounded-l-none rtl:rounded-r-none" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="10" value="<?php echo (isset($mode)) ? $data['phone_no'] : '' ?>" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> />
                             </div>
                         </div>
                     </div>
@@ -200,12 +188,42 @@ if (isset($_REQUEST["update"])) {
                         <div>
                             <label for="groupFname">State Name</label>
                             <select class="form-select text-black" name="state" id="state" <?php echo isset($mode) && $mode == 'view' ? 'disabled' : '' ?> required onchange="fillCity(this.value)">
+                                <?php
+                                $stmt = $obj->con1->prepare("SELECT * FROM states where country_id = ? ");
+                                $stmt->bind_param("i", $data["country_id"]);
+                                $stmt->execute();
+                                $Resp = $stmt->get_result();
+                                $stmt->close();
+
+                                while ($result = mysqli_fetch_array($Resp)) {
+                                ?>
+                                    <option value="<?php echo $result["id"]; ?>" <?php echo (isset($mode) && $data["state_id"] == $result["id"]) ? "selected" : ""; ?>>
+                                        <?php echo $result["name"]; ?>
+                                    </option>
+                                <?php
+                                }
+                                ?>
                             </select>
                         </div>
                     </div>
                     <div>
                         <label for="city">City</label>
                         <select class="form-select text-black" name="city" id="city" <?php echo isset($mode) && $mode == 'view' ? 'disabled' : '' ?> required>
+                            <?php
+                            $stmt = $obj->con1->prepare("SELECT * FROM cities where state_id = ?");
+                            $stmt->bind_param("i", $data["state_id"]);
+                            $stmt->execute();
+                            $Resp = $stmt->get_result();
+                            $stmt->close();
+
+                            while ($result = mysqli_fetch_array($Resp)) {
+                            ?>
+                                <option value="<?php echo $result["id"]; ?>" <?php echo (isset($mode) && $data["city_id"] == $result["id"]) ? "selected" : ""; ?>>
+                                    <?php echo $result["name"]; ?>
+                                </option>
+                            <?php
+                            }
+                            ?>
                         </select>
                     </div>
                     <div>
@@ -213,7 +231,7 @@ if (isset($_REQUEST["update"])) {
                         <input id="pincode" name="pincode" type="tel" class="form-input" placeholder="Enter Pincode" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="<?php echo (isset($mode)) ? $data['pincode'] : '' ?>" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> />
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-10">
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 gap-10">
                     <div class="col-md-6">
                         <label for="marital_s">Marital Status</label>
                         <div class="flex gap-10 items-center mt-3">
@@ -244,21 +262,42 @@ if (isset($_REQUEST["update"])) {
                         </div>
                     </div>
                     <div>
+                        <label for="gender">Gender</label>
+                        <div class="flex gap-8 items-center mt-3">
+                            <div>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="gender" id="male" class="form-radio" value="male" <?php echo (isset($mode) && $data['gender'] == "male") ? "checked" : "" ?> />
+                                    <span class="text-black">Male</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label class=" flex items-center cursor-pointer">
+                                    <input type="radio" name="gender" id="female" class="form-radio" value="female" <?php echo (isset($mode) && $data['gender'] == "female") ? "checked" : "" ?> />
+                                    <span class="text-black">Female</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+                    <div>
                         <label for="occupation">Occupation</label>
                         <input id="occupation" name="occupation" type="text" min="0" class="form-input" placeholder="Enter Occupation" value="<?php echo (isset($mode)) ? $data['occupation'] : '' ?>" required <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> />
                     </div>
 
                     <div>
                         <label for="blood_g">Blood Group</label>
-                        <select class="form-select" id="blood_g" name="blood_g" required>
-                            <option value="" selected>Select Blood Group</option>
-                            <option value="A+" <?php echo isset($data) && $data['blood_group'] == "A+" ? "selected" : "" ?>>A+</option>
-                            <option value="A-" <?php echo isset($data) && $data['blood_group'] == "A-" ? "selected" : "" ?>>A-</option>
-                            <option value="B+" <?php echo isset($data) && $data['blood_group'] == "B+" ? "selected" : "" ?>>B+</option>
-                            <option value="B-" <?php echo isset($data) && $data['blood_group'] == "B-" ? "selected" : "" ?>>B-</option>
-                            <option value="O+" <?php echo isset($data) && $data['blood_group'] == "O+" ? "selected" : "" ?>>O+</option>
-                            <option value="O-" <?php echo isset($data) && $data['blood_group'] == "O-" ? "selected" : "" ?>>O-</option>
-                            <option value="AB+" <?php echo isset($data) && $data['blood_group'] == "AB+" ? "selected" : "" ?>>AB+</option>
+                        <select class="form-select" id="blood_g" name="blood_g" <?php echo isset($mode) && $mode == 'view' ? 'disabled' : '' ?> required>
+                            <option value="">Select Blood Group</option>
+                            <option value="A+" <?php echo isset($mode) && $data['blood_group'] == "A+" ? "selected" : "" ?>>A+</option>
+                            <option value="A-" <?php echo isset($mode) && $data['blood_group'] == "A-" ? "selected" : "" ?>>A-</option>
+                            <option value="B+" <?php echo isset($mode) && $data['blood_group'] == "B+" ? "selected" : "" ?>>B+</option>
+                            <option value="B-" <?php echo isset($mode) && $data['blood_group'] == "B-" ? "selected" : "" ?>>B-</option>
+                            <option value="O+" <?php echo isset($mode) && $data['blood_group'] == "O+" ? "selected" : "" ?>>O+</option>
+                            <option value="O-" <?php echo isset($mode) && $data['blood_group'] == "O-" ? "selected" : "" ?>>O-</option>
+                            <option value="AB+" <?php echo isset($mode) && $data['blood_group'] == "AB+" ? "selected" : "" ?>>AB+</option>
+                            <option value="AB-" <?php echo isset($mode) && $data['blood_group'] == "AB-" ? "selected" : "" ?>>AB-</option>
+
                         </select>
                     </div>
                 </div>
@@ -284,11 +323,7 @@ if (isset($_REQUEST["update"])) {
 </div>
 
 <script type="text/javascript">
-    //$(document).ready(function() {
-       // eraseCookie("edit_id");
-       // eraseCookie("view_id");
-   // });
-    checkCosokies();
+    checkCookies();
 
     function go_back() {
         eraseCookie("edit_id");
@@ -304,26 +339,19 @@ if (isset($_REQUEST["update"])) {
             document.getElementById("city").innerHTML = xhttp.responseText;
         }
     }
+
     function fillState(cntrid) {
         const xhttp = new XMLHttpRequest();
         xhttp.open("GET", "getstate.php?cntrid=" + cntrid);
         xhttp.send();
         xhttp.onload = function() {
+            var data = xhttp.responseText.split("@@@");
             document.getElementById("state").innerHTML = xhttp.responseText;
+            document.getElementById("country_code").value = "+" + data[1];
+
         }
     }
 </script>
-<!-- <?php
-        if (isset($mode) && $mode == 'edit') {
-            echo "
-            <script>
-                const stid = document.getElementById('stateID').value;
-                const ctid =" . json_encode($data['city_id']) . ";
-                loadCities(stid, ctid);
-            </script>
-        ";
-        }
-        ?> -->
 
 <?php
 include "footer.php";

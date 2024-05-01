@@ -4,7 +4,7 @@ include "header.php";
 if (isset($_COOKIE['edit_id'])) {
 	$mode = 'edit';
 	$editId = $_COOKIE['edit_id'];
-	$stmt = $obj->con1->prepare("SELECT * FROM `event` where event_id=?");
+	$stmt = $obj->con1->prepare("SELECT * FROM `event_category` where event_id=?");
 	$stmt->bind_param('i', $editId);
 	$stmt->execute();
 	$data = $stmt->get_result()->fetch_assoc();
@@ -14,7 +14,7 @@ if (isset($_COOKIE['edit_id'])) {
 if (isset($_COOKIE['view_id'])) {
 	$mode = 'view';
 	$viewId = $_COOKIE['view_id'];
-	$stmt = $obj->con1->prepare("SELECT * FROM `event` where event_id=?");
+	$stmt = $obj->con1->prepare("SELECT * FROM `event_category` where event_id=?");
 	$stmt->bind_param('i', $viewId);
 	$stmt->execute();
 	$data = $stmt->get_result()->fetch_assoc();
@@ -22,32 +22,11 @@ if (isset($_COOKIE['view_id'])) {
 }
 if (isset($_REQUEST["btnsubmit"])) {
 	$event_name = $_REQUEST["event_name"];
-	$description = $_REQUEST["description"];
 	$event_date = $_REQUEST["event_date"];
-	$event_img = $_FILES['event_img']['name'];
-	$event_img = str_replace(' ', '_', $event_img);
-	$event_img_path = $_FILES['event_img']['tmp_name'];
-
-	if ($event_img != "") {
-		if (file_exists("images/event_image/" . $event_img)) {
-			$i = 0;
-			$PicFileName = $event_img;
-			$Arr1 = explode('.', $PicFileName);
-
-			$PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
-			while (file_exists("images/event_image/" . $PicFileName)) {
-				$i++;
-				$PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
-			}
-		} else {
-			$PicFileName = $event_img;
-		}
-	}
 
 	try {
-		echo "INSERT INTO `event`(`event_name`, `description`, `event_date`, `main_img`) VALUES ('".$event_name."','".$description."','".$event_date."','".$PicFileName."')";
-		$stmt = $obj->con1->prepare("INSERT INTO `event`(`event_name`, `description`, `event_date`, `main_img`) VALUES (?,?,?,?)");
-		$stmt->bind_param("ssss", $event_name, $description, $event_date, $PicFileName);
+		$stmt = $obj->con1->prepare("INSERT INTO `event_category`(`event_name`, `event_date`) VALUES (?,?)");
+		$stmt->bind_param("ss", $event_name, $event_date);
 		$Resp = $stmt->execute();
 		if (!$Resp) {
 			throw new Exception(
@@ -60,7 +39,6 @@ if (isset($_REQUEST["btnsubmit"])) {
 	}
 
 	if ($Resp) {
-		move_uploaded_file($event_img_path, "images/event_image/" . $PicFileName);
 		setcookie("msg", "data", time() + 3600, "/");
 		header("location:event.php");
 	} else {
@@ -71,36 +49,11 @@ if (isset($_REQUEST["btnsubmit"])) {
 if (isset($_REQUEST["btn_update"])) {
 	$id = $_COOKIE['edit_id'];
 	$event_name = $_REQUEST["event_name"];
-	$description = $_REQUEST["description"];
 	$event_date = $_REQUEST["event_date"];
-	$event_img = $_FILES['event_img']['name'];
-	$event_img = str_replace(' ', '_', $event_img);
-	$event_img_path = $_FILES['event_img']['tmp_name'];
-	$old_img = $_REQUEST['old_img'];
-
-	if ($event_img != "") {
-		if (file_exists("images/event_image/" . $event_img)) {
-			$i = 0;
-			$PicFileName = $event_img;
-			$Arr1 = explode('.', $PicFileName);
-
-			$PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
-			while (file_exists("images/event_image/" . $PicFileName)) {
-				$i++;
-				$PicFileName = $Arr1[0] . $i . "." . $Arr1[1];
-			}
-		} else {
-			$PicFileName = $event_img;
-		}
-		unlink("images/event_image/" . $old_img);
-		move_uploaded_file($event_img_path, "images/event_image/" . $PicFileName);
-	} else {
-		$PicFileName = $old_img;
-	}
-
+	
 	try {
-		$stmt = $obj->con1->prepare("UPDATE `event` SET `event_name`=?,`description`=?,`event_date`=?,`main_img`=? WHERE `event_id`=?");
-		$stmt->bind_param("ssssi", $event_name, $description, $event_date, $PicFileName, $id);
+		$stmt = $obj->con1->prepare("UPDATE `event_category` SET `event_name`=?, `event_date`=? WHERE `event_id`=?");
+		$stmt->bind_param("ssi", $event_name, $event_date, $id);
 		$Resp = $stmt->execute();
 		if (!$Resp) {
 			throw new Exception(
@@ -125,7 +78,7 @@ if (isset($_REQUEST["btn_update"])) {
 if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 	$event_subimg = $_REQUEST["event_subimg"];
 	try {
-		$stmt_del = $obj->con1->prepare("DELETE FROM `event_subimages` WHERE subimg_id='" . $_REQUEST["sub_img_id"] . "'");
+		$stmt_del = $obj->con1->prepare("DELETE FROM `event_images` WHERE img_id='" . $_REQUEST["sub_img_id"] . "'");
 		$Resp = $stmt_del->execute();
 		if (!$Resp) {
 			if (
@@ -147,7 +100,7 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 	} else {
 		setcookie("msg", "fail", time() + 3600, "/");
 	}
-	header("location:event.php");
+	header("location:add_event.php");
 }
 ?>
 <div class='p-6'>
@@ -175,46 +128,34 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 					<input id="event_date" name="event_date" type="date" class="form-input" required
 						value="<?php echo (isset($mode)) ? $data['event_date'] : '' ?>" <?php echo isset($mode) && $mode == 'view' ? 'readonly' : '' ?> />
 				</div>
-				
-				<div class="mb-4">
-					<label for="quill1">Description</label>
-					<div id="editor1">
-						<?php echo (isset($mode)) ? $data['description'] : '' ?>
-					</div>
-				</div>
-				<input type="hidden" id="quill-input1" name="description">
-
-				<div <?php echo (isset($mode) && $mode == 'view') ? 'hidden' : '' ?>>
-					<label for="image">Image</label>
-					<input id="event_img" name="event_img" class="demo1" type="file" data_btn_text="Browse"
-						onchange="readURL(this,'PreviewImage')" onchange="readURL(this,'PreviewImage')"
-						placeholder="drag and drop file here" />
-				</div>
-				<div>
-					<h4 class="font-bold text-primary mt-2  mb-3"
-						style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>">Preview</h4>
-					<img src="<?php echo (isset($mode)) ? 'images/event_image/' . $data["main_img"] : '' ?>" name="PreviewImage"
-						id="PreviewImage" width="400" height="400"
-						style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
-					<div id="imgdiv" style="color:red"></div>
-					<input type="hidden" name="old_img" id="old_img"
-						value="<?php echo (isset($mode) && $mode == 'edit') ? $data["main_img"] : '' ?>" />
-				</div>
 
 				<div class="relative inline-flex align-middle gap-3 mt-4 ">
-					<button type="submit" name="<?php echo isset($mode) && $mode == 'edit' ? 'btn_update' : 'btnsubmit' ?>"
-						id="save" class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : '' ?>"
-						onclick="return setQuillInput()">
+					<button type="submit" name="<?php echo isset($mode) && $mode=='edit'? 'btn_update' : 'btnsubmit' ?>" id="save" class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : ''?>">
 						<?php echo isset($mode) && $mode == 'edit' ? 'Update' : 'Save' ?>
 					</button>
 					<button type="button" class="btn btn-danger"
-						onclick="<?php echo (isset($mode)) ? 'javascript:go_back()' : 'window.location.reload()' ?>">Close</button>
+					onclick="<?php echo (isset($mode)) ? 'javascript:go_back()' : 'window.location.reload()' ?>">Close</button>
 				</div>
-		</div>
 		</form>
 	</div>
 </div>
 
+<?php if (isset($mode)) { ?>
+	<div class="animate__animated p-6" :class="[$store.app.animation]">
+	<div x-data='pagination'>
+		<h1 class="dark:text-white-dar text-2xl font-bold">Event Images</h1>
+		<div class="panel mt-6 flex items-center  justify-between relative">
+
+			<div class="flex gap-6 items-center pb-8 <?php echo (isset($mode) && $mode == 'view') ? 'hidden' : '' ?>">
+				<button type="button" name="btn_add_img" id="btn_add_img" class="p-2 btn btn-primary m-1 add-btn" onclick="location.href='add_event_subimages.php'">
+				<i class="ri-add-line mr-1"></i> Add Event Images</button>
+			</div>
+
+				<table id="myTable" class="table-hover whitespace-nowrap w-full"></table> 
+		</div>
+	</div>
+</div>
+<?php } ?>
 <script type="text/javascript">
 <?php if (isset($mode)) { ?>
 	function getActions(id, event_img) {
@@ -249,7 +190,7 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 						data: [
 						<?php
 							$id = ($mode=='edit')?$editId:$viewId;
-							$stmt = $obj->con1->prepare("SELECT * FROM `event_subimages` WHERE event_id=? order by subimg_id desc");
+							$stmt = $obj->con1->prepare("SELECT * FROM `event_images` WHERE event_id=? order by img_id desc");
 							$stmt->bind_param("i",$id);
 							$stmt->execute();
 							$Resp = $stmt->get_result();
@@ -257,8 +198,19 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
 							while ($row = mysqli_fetch_array($Resp)) { ?>
 								[
 								<?php echo $i; ?>,
-								'<img src="images/event_image/<?php echo addslashes($row["subimg"]); ?>" height="200" width="200" class="object-cover shadow rounded">',
-								getActions(<?php echo $row["subimg_id"]; ?>, '<?php echo addslashes($row["subimg"]); ?>')
+								`<?php 
+                                        $img_array= array("jpg", "jpeg", "png", "bmp");
+                                        $vd_array=array("mp4", "webm", "ogg","mkv");
+                                        $extn = strtolower(pathinfo($row["img"], PATHINFO_EXTENSION));
+                                        if (in_array($extn,$img_array)) {
+                                        ?>
+                                            <img src="images/event_image/<?php echo addslashes($row["img"]);?>" width="200" height="200" style="display:<?php (in_array($extn, $img_array))?'block':'none' ?>" class="object-cover shadow rounded">
+                                        <?php
+                                             } if (in_array($extn,$vd_array )) {
+                                        ?>
+                                            <video src="images/event_image/<?php echo addslashes($row["img"]);?>" height="200" width="200" style="display:<?php (in_array($extn, $vd_array))?'block':'none' ?>" class="object-cover shadow rounded" controls></video>
+                                        <?php } ?>`,
+								getActions(<?php echo $row["img_id"]; ?>, '<?php echo addslashes($row["img"]); ?>')
 								],
 								<?php $i++;
 							}
@@ -362,9 +314,9 @@ if (isset($_REQUEST["flg"]) && $_REQUEST["flg"] == "del") {
             return checkImage();
         } 
         <?php } ?> 
-		// else{
-		// 	return true;
-		// }
+		else {
+			return true;
+		}
 	}
 
 	function readURL(input, preview) {

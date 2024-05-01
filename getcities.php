@@ -8,7 +8,7 @@
 	$stmt->execute();
 	$result = $stmt->get_result();
 ?>
-<option value="">Choose State</option>
+<option value="">Choose City</option>
 
 <?php 
 while ($row = mysqli_fetch_assoc($result)) { 

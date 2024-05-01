@@ -4,10 +4,18 @@ include "header.php";
 
 $event_id = isset($_COOKIE['edit_id']) ? $_COOKIE['edit_id'] : $_COOKIE['view_id'];
 
+
+$stmt_id = $obj->con1->prepare("SELECT event_name FROM event_category WHERE event_id = ?");
+$stmt_id->bind_param('i', $event_id);
+$stmt_id->execute();
+$data_id = $stmt_id->get_result()->fetch_assoc();
+$stmt_id->close();
+
+
 if (isset($_COOKIE['edit_subimg_id'])) {
     $mode = 'edit';
     $editId = $_COOKIE['edit_subimg_id'];
-    $stmt = $obj->con1->prepare("SELECT * FROM `event_subimages` WHERE subimg_id=?");
+    $stmt = $obj->con1->prepare("SELECT * FROM `event_images` WHERE img_id=?");
     $stmt->bind_param('i', $editId);
     $stmt->execute();
     $data = $stmt->get_result()->fetch_assoc();
@@ -17,7 +25,7 @@ if (isset($_COOKIE['edit_subimg_id'])) {
 if (isset($_COOKIE['view_subimg_id'])) {
     $mode = 'view';
     $viewId = $_COOKIE['view_subimg_id'];
-    $stmt = $obj->con1->prepare("SELECT * FROM `event_subimages` WHERE subimg_id=?");
+    $stmt = $obj->con1->prepare("SELECT * FROM `event_images` WHERE img_id=?");
     $stmt->bind_param('i', $viewId);
     $stmt->execute();
     $data = $stmt->get_result()->fetch_assoc();
@@ -25,7 +33,6 @@ if (isset($_COOKIE['view_subimg_id'])) {
 }
 
 if (isset($_REQUEST["btn_submit"])) {
-
     try {
         // multiple event images 
         foreach ($_FILES["event_img"]['name'] as $key => $value) {
@@ -46,17 +53,18 @@ if (isset($_REQUEST["btn_submit"])) {
                 }
                 $SubImageTemp = $_FILES["event_img"]["tmp_name"][$key];
                 $SubImageName = str_replace(' ', '_', $SubImageName);
-                
+
                 // sub images qry
                 move_uploaded_file($SubImageTemp, "images/event_image/" . $SubImageName);
 
-                $stmt_image = $obj->con1->prepare("INSERT INTO `event_subimages`(`event_id`, `subimg`) VALUES (?,?)");
+                // echo "INSERT INTO `event_images`(`event_id`, `img`) VALUES ('".$event_id."','".$SubImageName."')";
+                $stmt_image = $obj->con1->prepare("INSERT INTO `event_images`(`event_id`, `img`) VALUES (?,?)");
                 $stmt_image->bind_param("is", $event_id, $SubImageName);
                 $Resp = $stmt_image->execute();
                 $stmt_image->close();
-            }   
+            }
         }
-        
+
         if (!$Resp) {
             throw new Exception(
                 "Problem in adding! " . strtok($obj->con1->error, "(")
@@ -102,9 +110,9 @@ if (isset($_REQUEST["btn_update"])) {
     } else {
         $PicFileName = $old_img;
     }
-    
+
     try {
-        $stmt = $obj->con1->prepare("UPDATE `event_subimages` SET `subimg`=? WHERE `subimg_id`=?");
+        $stmt = $obj->con1->prepare("UPDATE `event_images` SET `img`=? WHERE `img_id`=?");
         $stmt->bind_param("si", $PicFileName, $id);
         $Resp = $stmt->execute();
         if (!$Resp) {
@@ -144,39 +152,34 @@ if (isset($_REQUEST["btn_update"])) {
         <div class="mb-5">
             <form class="space-y-5" method="post" enctype="multipart/form-data">
 
+                <div>
+                    <label for="event_name">Event Name</label>
+                    <input id="event_name" name="event_name" type="text" class="form-input" required value="<?= $data_id["event_name"] ?>" placeholder="Enter Event" readonly />
+                </div>
+
                 <div <?php echo (isset($mode)) ? 'hidden' : '' ?>>
                     <label for="image">Image</label>
-                    <input id="event_img" class="demo1" type="file" name="event_img[]" multiple data_btn_text="Browse"
-                        onchange="readURL_multiple(this)" placeholder="drag and drop file here" multiple />
+                    <input id="event_img" class="demo1" type="file" name="event_img[]" multiple data_btn_text="Browse" onchange="readURL_multiple(this)" placeholder="drag and drop file here" multiple />
                     <div id="preview_image_div"></div>
                     <div id="imgdiv_multiple" style="color:red"></div>
                 </div>
 
                 <div <?php echo (isset($mode) && $mode == 'edit') ? '' : 'hidden' ?>>
                     <label for="image">Image</label>
-                    <input id="event_img_one" class="demo1" type="file" name="event_img_one" data_btn_text="Browse"
-                        onchange="readURL(this,'PreviewImage')" placeholder="drag and drop file here" />
+                    <input id="event_img_one" class="demo1" type="file" name="event_img_one" data_btn_text="Browse" onchange="readURL(this,'PreviewImage')" placeholder="drag and drop file here" />
                 </div>
                 <div <?php echo (isset($mode)) ? '' : 'hidden' ?>>
-                    <h4 class="font-bold text-primary mt-2  mb-3"
-                        style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>">Preview</h4>
-                    <img src="<?php echo (isset($mode)) ? 'images/event_image/' . $data["subimg"] : '' ?>"
-                        name="PreviewImage" id="PreviewImage" width="400" height="400"
-                        style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>"
-                        class="object-cover shadow rounded">
+                    <h4 class="font-bold text-primary mt-2  mb-3" style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>">Preview</h4>
+                    <img src="<?php echo (isset($mode)) ? 'images/event_image/' . $data["img"] : '' ?>" name="PreviewImage" id="PreviewImage" width="400" height="400" style="display:<?php echo (isset($mode)) ? 'block' : 'none' ?>" class="object-cover shadow rounded">
                     <div id="imgdiv" style="color:red"></div>
-                    <input type="hidden" name="old_img" id="old_img"
-                        value="<?php echo (isset($mode) && $mode == 'edit') ? $data["subimg"] : '' ?>" />
+                    <input type="hidden" name="old_img" id="old_img" value="<?php echo (isset($mode) && $mode == 'edit') ? $data["img"] : '' ?>" />
                 </div>
 
                 <div class="relative inline-flex align-middle gap-3 mt-4 ">
-                    <button type="submit"
-                        name="<?php echo isset($mode) && $mode == 'edit' ? 'btn_update' : 'btn_submit' ?>" id="save"
-                        class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : '' ?>" <?php echo isset($mode) ? '' : 'onclick="return checkImage()"' ?>>
+                    <button type="submit" name="<?php echo isset($mode) && $mode == 'edit' ? 'btn_update' : 'btn_submit' ?>" id="save" class="btn btn-success <?php echo isset($mode) && $mode == 'view' ? 'hidden' : '' ?>" <?php echo isset($mode) ? '' : 'onclick="return checkImage()"' ?>>
                         <?php echo isset($mode) && $mode == 'edit' ? 'Update' : 'Save' ?>
                     </button>
-                    <button type="button" class="btn btn-danger"
-                        onclick="<?php echo (isset($mode)) ? 'javascript:go_back()' : 'window.location.reload()' ?>">Close</button>
+                    <button type="button" class="btn btn-danger" onclick="javascript:go_back()">Close</button>
                 </div>
             </form>
         </div>
@@ -200,7 +203,7 @@ if (isset($_REQUEST["btn_update"])) {
             var extn = filename.split(".");
 
             if (extn[1].toLowerCase() == "jpg" || extn[1].toLowerCase() == "jpeg" || extn[1].toLowerCase() == "png" || extn[1].toLowerCase() == "bmp") {
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     $('#' + preview).attr('src', e.target.result);
                     document.getElementById(preview).style.display = "block";
                 };
@@ -208,8 +211,7 @@ if (isset($_REQUEST["btn_update"])) {
                 reader.readAsDataURL(input.files[0]);
                 $('#imgdiv').html("");
                 document.getElementById('save').disabled = false;
-            }
-            else {
+            } else {
                 $('#imgdiv').html("Please Select Image Only");
                 document.getElementById('save').disabled = true;
             }
@@ -225,18 +227,22 @@ if (isset($_REQUEST["btn_update"])) {
                 var filename = input.files.item(i).name;
                 var reader = new FileReader();
                 var extn = filename.split(".");
-
-                if (extn[1].toLowerCase() == "jpg" || extn[1].toLowerCase() == "jpeg" || extn[1].toLowerCase() == "png" || extn[1].toLowerCase() == "bmp") {
-                    reader.onload = function (e) {
-                        $('#preview_image_div').append('<img src="' + e.target.result + '" name="PreviewImage' + i + '" id="PreviewImage' + i + '" width="400" height="400" class="object-cover shadow rounded" style="display:inline-block; margin:2%;">');
-                    };
+                if (extn[1].toLowerCase() == "jpg" || extn[1].toLowerCase() == "jpeg" || extn[1].toLowerCase() == "png" || extn[1].toLowerCase() == "bmp" || extn[1].toLowerCase() == "mp4" || extn[1].toLowerCase() == "webm" || extn[1].toLowerCase() == "ogg") {
+                    if (extn[1].toLowerCase() == "jpg" || extn[1].toLowerCase() == "jpeg" || extn[1].toLowerCase() == "png" || extn[1].toLowerCase() == "bmp") {
+                        reader.onload = function(e) {
+                            $('#preview_image_div').append('<img src="' + e.target.result + '" name="PreviewImage' + i + '" id="PreviewImage' + i + '" width="400" height="400" class="object-cover shadow rounded" style="display:inline-block; margin:2%;">');
+                        };
+                    } else if (extn[1].toLowerCase() == "mp4" || extn[1].toLowerCase() == "webm" || extn[1].toLowerCase() == "ogg") {
+                        reader.onload = function(e) {
+                            $('#preview_image_div').append('<video src="' + e.target.result + '" name="PreviewVideo' + i + '" id="PreviewVideo' + i + '" width="400" height="400" style="display:inline-block" class="object-cover shadow rounded" controls></video>');
+                        }
+                    }
 
                     reader.readAsDataURL(input.files[i]);
                     $('#imgdiv_multiple').html("");
                     document.getElementById('save').disabled = false;
-                }
-                else {
-                    $('#imgdiv_multiple').html("Please Select Image Only");
+                } else {
+                    $('#imgdiv_multiple').html("Please Select Image Or Video Only");
                     document.getElementById('save').disabled = true;
                 }
             }
